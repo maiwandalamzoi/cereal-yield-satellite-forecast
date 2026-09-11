@@ -30,6 +30,24 @@ COUNTRIES = {
     "TUR": "Turkiye",
     "UKR": "Ukraine",
     "NLD": "Netherlands",
+    # Expansion: major global cereal/wheat producers, added to move past a
+    # 9-country panel -- same pipeline, same honesty standard, real curated
+    # grain-belt coordinates per country (see extract_weather.py), not a
+    # blind country-list dump.
+    "CHN": "China",
+    "IND": "India",
+    "USA": "United States",
+    "CAN": "Canada",
+    "AUS": "Australia",
+    "ARG": "Argentina",
+    "EGY": "Egypt, Arab Rep.",
+    "MAR": "Morocco",
+    "KGZ": "Kyrgyz Republic",
+    "AZE": "Azerbaijan",
+    "GEO": "Georgia",
+    "FRA": "France",
+    "DEU": "Germany",
+    "TKM": "Turkmenistan",
 }
 
 YEAR_MIN, YEAR_MAX = 2001, 2023  # MOD13Q1 (Terra NDVI/EVI) starts 2000-02

@@ -16,10 +16,17 @@ Models compared, in increasing complexity:
   5. xgboost
   6. lightgbm
 
-With only ~198 rows (~150 in training), simpler models are not a formality
-here -- they are a real contender, not just a strawman baseline. "Best
-model" is decided by test-set RMSE/R2 below, not by which one sounds most
+With a few hundred rows, simpler models are not a formality here -- they
+are a real contender, not just a strawman baseline. "Best model" is
+decided by test-set RMSE/R2 below, not by which one sounds most
 sophisticated.
+
+Features use the monthly Feb-Jun NDVI/EVI/precip/temp breakdown, NOT also
+the season-mean columns -- ndvi_season_mean and evi_season_mean are
+arithmetic means of their own 5 monthly columns, so including both would
+be exact linear redundancy (rank-deficient for the fixed-effects OLS
+model specifically). ndvi_season_max is kept: max isn't a linear function
+of the monthly means, so it carries information the monthly columns don't.
 """
 import os
 
@@ -36,10 +43,14 @@ import statsmodels.api as sm
 
 TRAIN_END_YEAR = 2018  # train 2002-2018, test 2019-2023
 
-FEATURES = [
-    "ndvi_season_mean", "ndvi_season_max", "evi_season_mean",
-    "season_precip_total_mm", "season_temp_mean_c", "yield_lag1",
-]
+MONTHS = [2, 3, 4, 5, 6]
+FEATURES = (
+    [f"ndvi_m{m:02d}" for m in MONTHS]
+    + [f"evi_m{m:02d}" for m in MONTHS]
+    + [f"precip_m{m:02d}_mm" for m in MONTHS]
+    + [f"temp_m{m:02d}_c" for m in MONTHS]
+    + ["ndvi_season_max", "yield_lag1"]
+)
 TARGET = "cereal_yield_kg_ha"
 
 
@@ -68,7 +79,7 @@ def main():
     # 1. Naive baseline: this year = last year
     evaluate("baseline_lag1", y_test, test["yield_lag1"], results)
 
-    # 2. Ridge on standardized physical features (no country identity at all)
+    # 2. Ridge on standardized monthly physical features (no country identity)
     scaler = StandardScaler().fit(X_train)
     ridge = Ridge(alpha=1.0).fit(scaler.transform(X_train), y_train)
     evaluate("ridge", y_test, ridge.predict(scaler.transform(X_test)), results)

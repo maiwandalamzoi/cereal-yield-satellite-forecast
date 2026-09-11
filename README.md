@@ -1,5 +1,10 @@
 # Cereal Yield Forecasting from Satellite + Weather Data
 
+**Live dashboards (click to open):**
+- 🌾 **[Results report](https://maiwandalamzoi.github.io/cereal-yield-satellite-forecast/report.html)** — pipeline, model comparison, feature importance, Monte Carlo simulator
+- 🗺️ **[Grain Belt Atlas](https://maiwandalamzoi.github.io/cereal-yield-satellite-forecast/atlas.html)** — interactive map, click any country for its real data sources and risk
+- Or start here: **[maiwandalamzoi.github.io/cereal-yield-satellite-forecast](https://maiwandalamzoi.github.io/cereal-yield-satellite-forecast/)**
+
 Predicts a country's annual cereal yield from in-season satellite vegetation
 indices and weather, across nine wheat-belt countries (Afghanistan, Pakistan,
 Iran, Kazakhstan, Uzbekistan, Tajikistan, Turkiye, Ukraine) plus one
@@ -155,8 +160,10 @@ Read this before citing the results anywhere:
 
 ## Dashboards
 
-- **[Harvest From Orbit](https://claude.ai/code/artifact/a8e1c53a-400b-488d-afea-434fcc93bfac)** — the full results report: pipeline, model comparison, feature importance, Monte Carlo simulator, all 9 countries' yield trends.
-- **[Grain Belt Atlas](https://claude.ai/code/artifact/acf0445e-1da4-4946-88c1-b3f8c509b4bf)** — a separate interactive map. Click any of the 9 countries to see exactly where its data came from (the real satellite footprint and weather-station coordinates), its yield trend, and its drought-scenario risk. Built with `src/build_map_paths.py` — see that file's docstring for how the map itself was generated.
+Both served from this repo's own GitHub Pages (`docs/`) — no third-party branding, just the pages:
+
+- **[Harvest From Orbit](https://maiwandalamzoi.github.io/cereal-yield-satellite-forecast/report.html)** — the full results report: pipeline, model comparison, feature importance, Monte Carlo simulator, per-country yield trends.
+- **[Grain Belt Atlas](https://maiwandalamzoi.github.io/cereal-yield-satellite-forecast/atlas.html)** — an interactive map. Click any country to see exactly where its data came from (the real satellite footprint and weather-station coordinates), its yield trend, and its drought-scenario risk. Built with `src/build_map_paths.py` — see that file's docstring for how the map itself was generated.
 
 ## Interactive demo
 
