@@ -147,6 +147,19 @@ Read this before citing the results anywhere:
 - **No farmer-reported ground truth anywhere in this pipeline** — labels are
   national statistics, not field-level outcomes.
 
+## Interactive demo
+
+`streamlit_app.py` puts a UI on top of `src/simulate.py` — pick a country
+and a scenario, see the projected yield distribution vs. that country's most
+recent actual harvest. Deliberately has no independent rainfall/temperature
+slider (see the app's own "Why isn't there a slider?" expander) — the
+methodology stayed physically honest even where that made for a less flashy
+demo control.
+
+```bash
+streamlit run streamlit_app.py
+```
+
 ## Setup
 
 ```bash
