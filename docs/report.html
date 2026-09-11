@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Results report: satellite+weather cereal yield forecasting, honest model benchmarks, Monte Carlo scenario simulator.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%8C%BE%3C/text%3E%3C/svg%3E">
+<style>*{margin:0;padding:0}img{max-width:100%}</style>
+<title>Harvest From Orbit</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,440;9..144,560;9..144,650&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:            #F7F7F1;
+    --surface:       #FFFFFF;
+    --surface-sunk:  #F0F0E8;
+    --ink:           #1B1F17;
+    --ink-2:         #565F4E;
+    --ink-muted:     #8B9284;
+    --border:        rgba(27,31,23,0.12);
+    --grid:          #E2E1D5;
+    --accent:        #3E7D3E;
+    --accent-ink:    #245A28;
+    --accent-tint:   rgba(62,125,62,0.12);
+    --gold:          #A5791F;
+    --gold-tint:     rgba(165,121,31,0.14);
+    --dry:           #B5562E;
+    --dry-tint:      rgba(181,86,46,0.13);
+    --wet:           #0E8A73;
+    --wet-tint:      rgba(14,138,115,0.13);
+    --typical:       #93876E;
+    --critical:      #A6402A;
+    --shadow:        0 1px 2px rgba(27,31,23,0.06), 0 8px 24px -12px rgba(27,31,23,0.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:            #12150F;
+      --surface:       #1B2016;
+      --surface-sunk:  #171B12;
+      --ink:           #ECEEE4;
+      --ink-2:         #B7BFAE;
+      --ink-muted:     #838C7C;
+      --border:        rgba(236,238,228,0.13);
+      --grid:          #2A3023;
+      --accent:        #5FBD5F;
+      --accent-ink:    #7DD37D;
+      --accent-tint:   rgba(95,189,95,0.16);
+      --gold:          #D9AE55;
+      --gold-tint:     rgba(217,174,85,0.16);
+      --dry:           #D9764A;
+      --dry-tint:      rgba(217,118,74,0.18);
+      --wet:           #22A886;
+      --wet-tint:      rgba(34,168,134,0.18);
+      --typical:       #A69B82;
+      --critical:      #E0714F;
+      --shadow:        0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:            #12150F;
+    --surface:       #1B2016;
+    --surface-sunk:  #171B12;
+    --ink:           #ECEEE4;
+    --ink-2:         #B7BFAE;
+    --ink-muted:     #838C7C;
+    --border:        rgba(236,238,228,0.13);
+    --grid:          #2A3023;
+    --accent:        #5FBD5F;
+    --accent-ink:    #7DD37D;
+    --accent-tint:   rgba(95,189,95,0.16);
+    --gold:          #D9AE55;
+    --gold-tint:     rgba(217,174,85,0.16);
+    --dry:           #D9764A;
+    --dry-tint:      rgba(217,118,74,0.18);
+    --wet:           #22A886;
+    --wet-tint:      rgba(34,168,134,0.18);
+    --typical:       #A69B82;
+    --critical:      #E0714F;
+    --shadow:        0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+
+  *{box-sizing:border-box; min-width:0;}
+  html,body{overflow-x:hidden; max-width:100%;}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"Public Sans",system-ui,-apple-system,sans-serif;
+    font-size:15px; line-height:1.55;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px 96px;}
+  h1,h2,h3{font-family:"Fraunces",Georgia,serif; text-wrap:balance; font-weight:560; color:var(--ink); margin:0;}
+  a{color:var(--accent-ink);}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums;}
+
+  /* ---- masthead ---- */
+  .masthead{padding:56px 0 32px; border-bottom:1px solid var(--border);}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:0.09em;
+    text-transform:uppercase; color:var(--ink-muted); margin-bottom:14px;
+  }
+  .masthead h1{font-size:42px; line-height:1.08; margin-bottom:14px;}
+  .masthead .sub{font-size:16.5px; color:var(--ink-2); max-width:62ch; margin-bottom:22px;}
+  .meta-row{display:flex; flex-wrap:wrap; gap:8px; align-items:center;}
+  .pill{
+    display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:100px;
+    font-family:"IBM Plex Mono",monospace; font-size:12px; border:1px solid var(--border);
+    background:var(--surface); color:var(--ink-2);
+  }
+  .pill.good{color:var(--accent-ink); border-color:transparent; background:var(--accent-tint);}
+  .pill svg{width:12px;height:12px;}
+  .pill a{color:inherit; text-decoration:none;}
+
+  /* ---- section scaffolding ---- */
+  section{padding:48px 0; border-bottom:1px solid var(--border);}
+  section:last-of-type{border-bottom:none;}
+  .kicker{font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold); margin-bottom:8px;}
+  section h2{font-size:26px; margin-bottom:6px;}
+  .section-sub{color:var(--ink-2); font-size:14.5px; max-width:64ch; margin-bottom:28px;}
+
+  /* ---- stat band ---- */
+  .stat-band{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden;}
+  .stat{background:var(--surface); padding:22px 20px;}
+  .stat .n{font-family:"Fraunces",serif; font-weight:650; font-size:30px; font-variant-numeric:tabular-nums; color:var(--ink);}
+  .stat .n .unit{font-size:16px; font-weight:500; color:var(--ink-2);}
+  .stat .lbl{font-size:12.5px; color:var(--ink-muted); margin-top:4px;}
+  .stat.hi .n{color:var(--accent-ink);}
+  @media (max-width:720px){.stat-band{grid-template-columns:repeat(2,1fr);}}
+
+  /* ---- pipeline ---- */
+  .pipeline{display:flex; gap:0; overflow-x:auto; padding-bottom:4px;}
+  .pstep{flex:1 1 0; min-width:148px; position:relative; padding:18px 16px 16px; border:1px solid var(--border); background:var(--surface); }
+  .pstep:not(:last-child){border-right:none;}
+  .pstep:first-child{border-radius:10px 0 0 10px;}
+  .pstep:last-child{border-radius:0 10px 10px 0;}
+  .pstep .num{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--gold); margin-bottom:8px;}
+  .pstep .t{font-size:13.5px; font-weight:600; margin-bottom:4px;}
+  .pstep .d{font-size:12px; color:var(--ink-muted); line-height:1.4;}
+  .pstep .file{display:block; margin-top:8px; font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--ink-muted);}
+
+  /* ---- bar charts (css-width bars) ---- */
+  .barchart{display:flex; flex-direction:column; gap:10px;}
+  .barrow{display:grid; grid-template-columns:150px 1fr 84px; align-items:center; gap:12px;}
+  .barrow .lbl{font-size:13px; color:var(--ink-2);}
+  .barrow.best .lbl{color:var(--ink); font-weight:600;}
+  .bartrack{height:20px; background:var(--surface-sunk); border-radius:4px; overflow:hidden; position:relative;}
+  .barfill{height:100%; border-radius:4px; background:var(--ink-muted); opacity:0.55;}
+  .barrow.best .barfill{background:var(--accent); opacity:1;}
+  .barrow.baseline .barfill{background:transparent; border:2px dashed var(--ink-muted); opacity:0.9;}
+  .barval{font-family:"IBM Plex Mono",monospace; font-size:12.5px; text-align:right; color:var(--ink-2); font-variant-numeric:tabular-nums;}
+  .barrow.best .barval{color:var(--accent-ink); font-weight:600;}
+
+  .fi-track{background:var(--surface-sunk);}
+  .fi-fill{background:var(--accent);}
+
+  .callout{
+    margin-top:22px; padding:16px 18px; border-radius:10px; font-size:13.5px; line-height:1.55;
+    background:var(--surface-sunk); border:1px solid var(--border); color:var(--ink-2);
+  }
+  .callout strong{color:var(--ink);}
+  .callout.warn{background:var(--gold-tint); border-color:transparent;}
+  .callout.crit{background:var(--dry-tint); border-color:transparent;}
+
+  /* ---- table ---- */
+  table{width:100%; border-collapse:collapse; font-size:13.5px; margin-top:18px;}
+  th{text-align:left; font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:0.04em; text-transform:uppercase; color:var(--ink-muted); font-weight:500; padding:8px 10px; border-bottom:1px solid var(--border);}
+  td{padding:9px 10px; border-bottom:1px solid var(--border); color:var(--ink-2);}
+  td.num{font-family:"IBM Plex Mono",monospace; text-align:right; font-variant-numeric:tabular-nums;}
+  tr.best td{color:var(--ink); font-weight:600;}
+  .twrap{overflow-x:auto;}
+
+  /* ---- simulator ---- */
+  .chips{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:24px;}
+  .chip{
+    font-family:"IBM Plex Mono",monospace; font-size:12.5px; padding:7px 13px; border-radius:100px;
+    border:1px solid var(--border); background:var(--surface); color:var(--ink-2); cursor:pointer;
+  }
+  .chip:hover{border-color:var(--accent);}
+  .chip.on{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+  :root[data-theme="dark"] .chip.on, :root:not([data-theme="light"]) .chip.on { background:var(--accent); color:#0d130d; border-color:var(--accent); }
+
+  .sim-card{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:24px 24px 20px; box-shadow:var(--shadow);}
+  .sim-head{display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin-bottom:6px; flex-wrap:wrap;}
+  .sim-head h3{font-size:19px;}
+  .sim-head .actual{font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink-muted);}
+  #simSvgWrap{margin:18px 0 6px;}
+  .sim-legend{display:flex; gap:18px; flex-wrap:wrap; font-size:12px; color:var(--ink-2); margin-top:10px;}
+  .sim-legend .sw{display:inline-flex; align-items:center; gap:6px;}
+  .sim-legend i{width:10px;height:10px;border-radius:3px;display:inline-block;}
+
+  /* ---- trends grid ---- */
+  .trend-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden;}
+  .trend-card{background:var(--surface); padding:14px 16px 10px;}
+  .trend-card .th{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;}
+  .trend-card .name{font-size:13px; font-weight:600;}
+  .trend-card .iso{font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--ink-muted);}
+  .trend-card svg{display:block; width:100%; height:56px; margin-top:4px;}
+  .trend-card .range{font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--ink-muted); display:flex; justify-content:space-between; margin-top:2px;}
+  @media (max-width:720px){.trend-grid{grid-template-columns:repeat(2,1fr);}}
+
+  /* ---- limitations ---- */
+  .limits{display:flex; flex-direction:column; gap:2px;}
+  .limit{display:grid; grid-template-columns:120px 1fr; gap:16px; padding:14px 0; border-top:1px solid var(--border);}
+  .limit:first-child{border-top:none;}
+  .limit .tag{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:0.03em; padding:4px 9px; border-radius:6px; height:fit-content; white-space:nowrap;}
+  .tag.proxy{background:var(--gold-tint); color:var(--gold);}
+  .tag.window{background:var(--dry-tint); color:var(--dry);}
+  .tag.spatial{background:var(--wet-tint); color:var(--wet);}
+  .tag.point{background:var(--gold-tint); color:var(--gold);}
+  .tag.n{background:var(--dry-tint); color:var(--dry);}
+  .tag.gt{background:var(--surface-sunk); color:var(--ink-2);}
+  .limit p{margin:0; font-size:13.5px; color:var(--ink-2);}
+  .limit p strong{color:var(--ink);}
+  @media (max-width:600px){.limit{grid-template-columns:1fr;}}
+
+  /* ---- footer ---- */
+  footer{padding:44px 0 0;}
+  .repro{max-width:100%; background:var(--surface-sunk); border:1px solid var(--border); border-radius:10px; padding:18px 20px; font-family:"IBM Plex Mono",monospace; font-size:12.5px; line-height:1.9; color:var(--ink-2); overflow-x:auto; white-space:pre;}
+  .repro .c{color:var(--ink-muted);}
+  .next-box{margin-top:28px; padding:20px 22px; border-radius:12px; background:var(--accent-tint); display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;}
+  .next-box .t{font-family:"Fraunces",serif; font-weight:600; font-size:16px;}
+  .next-box .d{font-size:13px; color:var(--ink-2); margin-top:2px;}
+  .foot-links{display:flex; gap:18px; flex-wrap:wrap; margin-top:24px; font-size:13px; color:var(--ink-muted);}
+  .foot-links a{color:var(--ink-2);}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">Project status report · 11 Sep 2026</div>
+    <h1>Harvest From Orbit</h1>
+    <p class="sub">Cereal yield forecasting for nine wheat-belt countries, built from real satellite and weather data, benchmarked honestly against a naive baseline, with a Monte Carlo scenario simulator on top.</p>
+    <div class="meta-row">
+      <span class="pill good"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> CI passing</span>
+      <span class="pill good"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> clone-verified, zero warnings</span>
+      <span class="pill"><a href="https://github.com/maiwandalamzoi/cereal-yield-satellite-forecast" target="_blank" rel="noopener">github.com/…/cereal-yield-satellite-forecast ↗</a></span>
+      <span class="pill">MIT license</span>
+    </div>
+  </header>
+
+  <section id="stats">
+    <div class="stat-band">
+      <div class="stat"><div class="n">9</div><div class="lbl">wheat-belt countries + Netherlands</div></div>
+      <div class="stat"><div class="n">2001<span class="unit">–2023</span></div><div class="lbl">growing seasons covered</div></div>
+      <div class="stat"><div class="n">207</div><div class="lbl">real ground-truth yield rows</div></div>
+      <div class="stat hi"><div class="n">+13<span class="unit">%</span></div><div class="lbl">best model's RMSE lift over naive baseline</div></div>
+    </div>
+  </section>
+
+  <section id="pipeline">
+    <div class="kicker">What was built</div>
+    <h2>A six-stage pipeline, not a notebook</h2>
+    <p class="section-sub">Each stage writes a file the next stage reads — reproducible end to end from <span class="mono">python src/extract_yield.py</span> through <span class="mono">src/simulate.py</span>.</p>
+    <div class="pipeline">
+      <div class="pstep"><div class="num">01</div><div class="t">Yield labels</div><div class="d">World Bank cereal yield, kg/ha, 2001–2023</div><span class="file">extract_yield.py</span></div>
+      <div class="pstep"><div class="num">02</div><div class="t">Satellite</div><div class="d">MODIS NDVI/EVI, Feb–Jun season, via Earth Engine</div><span class="file">extract_satellite.py</span></div>
+      <div class="pstep"><div class="num">03</div><div class="t">Weather</div><div class="d">NASA POWER precip + temp, grain-belt point</div><span class="file">extract_weather.py</span></div>
+      <div class="pstep"><div class="num">04</div><div class="t">Panel + lag</div><div class="d">Merge, add yield_lag1, drop first year/country</div><span class="file">build_dataset.py</span></div>
+      <div class="pstep"><div class="num">05</div><div class="t">Train &amp; evaluate</div><div class="d">6 models, time-based split, honest metrics</div><span class="file">train.py</span></div>
+      <div class="pstep"><div class="num">06</div><div class="t">Simulate</div><div class="d">Monte Carlo scenarios, stratified resampling</div><span class="file">simulate.py</span></div>
+    </div>
+  </section>
+
+  <section id="models">
+    <div class="kicker">Results · model comparison</div>
+    <h2>Which model actually wins?</h2>
+    <p class="section-sub">Trained on 2002–2018 (153 rows), tested on 2019–2023 (45 rows) — years the model never saw. Sorted by test RMSE, lower is better.</p>
+
+    <div class="barchart" id="modelBars"></div>
+
+    <div class="twrap">
+      <table id="modelTable"></table>
+    </div>
+
+    <div class="callout">
+      <strong>Honest read:</strong> the naive "yield repeats last year" baseline is already strong (R²=0.954) — most of a country's cereal yield <em>is</em> just its recent level. The best model (a country fixed-effects regression, tied with Random Forest) beats it by only ~13% RMSE. A real, disclosed lift — not a headline number. LightGBM's stock hyperparameters (<span class="mono">min_child_samples=20</span>) are tuned for far more rows than this study's 153; no tuning was done to flatter it.
+    </div>
+  </section>
+
+  <section id="importance">
+    <div class="kicker">Results · feature importance</div>
+    <h2>What the winning model actually looks at</h2>
+    <p class="section-sub">XGBoost feature importance — season-average NDVI and last year's own yield carry nearly all of it.</p>
+    <div class="barchart" id="fiBars"></div>
+    <div class="callout">
+      A single weather point per country (<span class="mono">season_precip_total_mm</span> + <span class="mono">season_temp_mean_c</span>) contributes under 2% combined — consistent with using one grain-belt coordinate instead of a country-wide average. This is exactly why the scenario simulator below resamples real NDVI/weather together, rather than moving rainfall on its own.
+    </div>
+  </section>
+
+  <section id="simulator">
+    <div class="kicker">Monte Carlo scenario simulator</div>
+    <h2>Not one number — a distribution</h2>
+    <p class="section-sub">5,000 draws per scenario, resampled from that country's own real 2002–2023 seasons, stratified by NDVI tercile. Pick a country.</p>
+
+    <div class="chips" id="countryChips"></div>
+
+    <div class="sim-card">
+      <div class="sim-head">
+        <h3 id="simCountryName">Afghanistan</h3>
+        <span class="actual" id="simActual"></span>
+      </div>
+      <div id="simSvgWrap"></div>
+      <div class="sim-legend">
+        <span class="sw"><i style="background:var(--dry)"></i>Driest third of seasons</span>
+        <span class="sw"><i style="background:var(--typical)"></i>All seasons (typical)</span>
+        <span class="sw"><i style="background:var(--wet)"></i>Wettest third of seasons</span>
+      </div>
+    </div>
+
+    <div class="callout warn" id="simCaveat"></div>
+  </section>
+
+  <section id="trends">
+    <div class="kicker">Underlying data</div>
+    <h2>23 years, 9 countries, real numbers</h2>
+    <p class="section-sub">Actual cereal yield per country, 2002–2023 (World Bank). Each panel scaled to its own range — magnitudes differ by 8× between countries, shapes are the point here.</p>
+    <div class="trend-grid" id="trendGrid"></div>
+  </section>
+
+  <section id="limitations">
+    <div class="kicker">Read before citing this anywhere</div>
+    <h2>Known limitations</h2>
+    <div class="limits">
+      <div class="limit"><span class="tag proxy">Proxy label</span><p><strong>Cereal yield, not wheat-specific.</strong> World Bank's series covers all cereals; FAOSTAT's wheat-only series was down (HTTP 521) while this was built. Defensible for Afghanistan (&gt;80% wheat), less so elsewhere in the panel.</p></div>
+      <div class="limit"><span class="tag window">Fixed window</span><p><strong>Same Feb–Jun season for every country</strong>, not a per-country wheat calendar. Approximate, not phenology-matched.</p></div>
+      <div class="limit"><span class="tag spatial">Spatial blend</span><p><strong>Country-level satellite averaging</strong> mixes non-cropland pixels — desert, mountains, cities — diluting the signal vs. a cropland mask.</p></div>
+      <div class="limit"><span class="tag point">Point weather</span><p><strong>One coordinate per country</strong>, not an area average — NASA POWER is a point API. See the &lt;2% combined feature importance above.</p></div>
+      <div class="limit"><span class="tag n">Small N</span><p><strong>~150 training rows.</strong> Enough to compare models honestly, not enough for strong generalization claims. Simulator pools go as low as 8 seasons.</p></div>
+      <div class="limit"><span class="tag gt">No field data</span><p><strong>Labels are national statistics</strong>, not farmer-reported outcomes — nowhere in this pipeline is there ground truth from an actual field.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="kicker">Reproduce</div>
+    <div class="repro"><span class="c"># zero setup needed — models + data are committed</span>
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+
+<span class="c"># or re-run the pipeline from scratch (needs a GEE key)</span>
+python src/extract_yield.py &amp;&amp; python src/extract_satellite.py &amp;&amp; python src/extract_weather.py
+python src/build_dataset.py &amp;&amp; python src/train.py &amp;&amp; python src/simulate.py</div>
+
+    <div class="next-box">
+      <div>
+        <div class="t">Ready for project B</div>
+        <div class="d">CI green on every push · fresh-clone install verified · version-mismatch warning found and fixed</div>
+      </div>
+      <span class="pill good"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> all checks pass</span>
+    </div>
+
+    <div class="foot-links">
+      <a href="atlas.html">Grain Belt Atlas (map dashboard)</a>
+      <a href="https://github.com/maiwandalamzoi/cereal-yield-satellite-forecast" target="_blank" rel="noopener">Repository</a>
+      <a href="https://github.com/maiwandalamzoi/crop-stress-prediction" target="_blank" rel="noopener">Companion project — crop-stress-prediction</a>
+      <span>MIT License</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+const PANEL = [{"country_iso3":"AFG","country_name":"Afghanistan","year":2002,"cereal_yield_kg_ha":1669.8,"ndvi_season_mean":0.13,"yield_lag1":1006.7},{"country_iso3":"AFG","country_name":"Afghanistan","year":2003,"cereal_yield_kg_ha":1458.0,"ndvi_season_mean":0.136,"yield_lag1":1669.8},{"country_iso3":"AFG","country_name":"Afghanistan","year":2004,"cereal_yield_kg_ha":1334.8,"ndvi_season_mean":0.13,"yield_lag1":1458.0},{"country_iso3":"AFG","country_name":"Afghanistan","year":2005,"cereal_yield_kg_ha":1790.4,"ndvi_season_mean":0.13,"yield_lag1":1334.8},{"country_iso3":"AFG","country_name":"Afghanistan","year":2006,"cereal_yield_kg_ha":1551.7,"ndvi_season_mean":0.132,"yield_lag1":1790.4},{"country_iso3":"AFG","country_name":"Afghanistan","year":2007,"cereal_yield_kg_ha":1915.3,"ndvi_season_mean":0.141,"yield_lag1":1551.7},{"country_iso3":"AFG","country_name":"Afghanistan","year":2008,"cereal_yield_kg_ha":1455.4,"ndvi_season_mean":0.115,"yield_lag1":1915.3},{"country_iso3":"AFG","country_name":"Afghanistan","year":2009,"cereal_yield_kg_ha":2040.7,"ndvi_season_mean":0.143,"yield_lag1":1455.4},{"country_iso3":"AFG","country_name":"Afghanistan","year":2010,"cereal_yield_kg_ha":2011.1,"ndvi_season_mean":0.142,"yield_lag1":2040.7},{"country_iso3":"AFG","country_name":"Afghanistan","year":2011,"cereal_yield_kg_ha":1659.9,"ndvi_season_mean":0.123,"yield_lag1":2011.1},{"country_iso3":"AFG","country_name":"Afghanistan","year":2012,"cereal_yield_kg_ha":2094.2,"ndvi_season_mean":0.126,"yield_lag1":1659.9},{"country_iso3":"AFG","country_name":"Afghanistan","year":2013,"cereal_yield_kg_ha":2127.7,"ndvi_season_mean":0.14,"yield_lag1":2094.2},{"country_iso3":"AFG","country_name":"Afghanistan","year":2014,"cereal_yield_kg_ha":2096.6,"ndvi_season_mean":0.127,"yield_lag1":2127.7},{"country_iso3":"AFG","country_name":"Afghanistan","year":2015,"cereal_yield_kg_ha":2206.4,"ndvi_season_mean":0.136,"yield_lag1":2096.6},{"country_iso3":"AFG","country_name":"Afghanistan","year":2016,"cereal_yield_kg_ha":2043.3,"ndvi_season_mean":0.145,"yield_lag1":2206.4},{"country_iso3":"AFG","country_name":"Afghanistan","year":2017,"cereal_yield_kg_ha":2091.4,"ndvi_season_mean":0.132,"yield_lag1":2043.3},{"country_iso3":"AFG","country_name":"Afghanistan","year":2018,"cereal_yield_kg_ha":2253.2,"ndvi_season_mean":0.126,"yield_lag1":2091.4},{"country_iso3":"AFG","country_name":"Afghanistan","year":2019,"cereal_yield_kg_ha":2184.7,"ndvi_season_mean":0.137,"yield_lag1":2253.2},{"country_iso3":"AFG","country_name":"Afghanistan","year":2020,"cereal_yield_kg_ha":2050.8,"ndvi_season_mean":0.147,"yield_lag1":2184.7},{"country_iso3":"AFG","country_name":"Afghanistan","year":2021,"cereal_yield_kg_ha":2099.1,"ndvi_season_mean":0.133,"yield_lag1":2050.8},{"country_iso3":"AFG","country_name":"Afghanistan","year":2022,"cereal_yield_kg_ha":2193.4,"ndvi_season_mean":0.133,"yield_lag1":2099.1},{"country_iso3":"AFG","country_name":"Afghanistan","year":2023,"cereal_yield_kg_ha":2303.0,"ndvi_season_mean":0.133,"yield_lag1":2193.4},{"country_iso3":"IRN","country_name":"Iran","year":2002,"cereal_yield_kg_ha":2272.9,"ndvi_season_mean":0.143,"yield_lag1":1932.6},{"country_iso3":"IRN","country_name":"Iran","year":2003,"cereal_yield_kg_ha":2383.4,"ndvi_season_mean":0.139,"yield_lag1":2272.9},{"country_iso3":"IRN","country_name":"Iran","year":2004,"cereal_yield_kg_ha":2417.1,"ndvi_season_mean":0.145,"yield_lag1":2383.4},{"country_iso3":"IRN","country_name":"Iran","year":2005,"cereal_yield_kg_ha":2301.2,"ndvi_season_mean":0.146,"yield_lag1":2417.1},{"country_iso3":"IRN","country_name":"Iran","year":2006,"cereal_yield_kg_ha":2391.8,"ndvi_season_mean":0.147,"yield_lag1":2301.2},{"country_iso3":"IRN","country_name":"Iran","year":2007,"cereal_yield_kg_ha":2454.3,"ndvi_season_mean":0.15,"yield_lag1":2391.8},{"country_iso3":"IRN","country_name":"Iran","year":2008,"cereal_yield_kg_ha":1720.9,"ndvi_season_mean":0.127,"yield_lag1":2454.3},{"country_iso3":"IRN","country_name":"Iran","year":2009,"cereal_yield_kg_ha":1997.2,"ndvi_season_mean":0.143,"yield_lag1":1720.9},{"country_iso3":"IRN","country_name":"Iran","year":2010,"cereal_yield_kg_ha":2173.5,"ndvi_season_mean":0.159,"yield_lag1":1997.2},{"country_iso3":"IRN","country_name":"Iran","year":2011,"cereal_yield_kg_ha":1713.7,"ndvi_season_mean":0.138,"yield_lag1":2173.5},{"country_iso3":"IRN","country_name":"Iran","year":2012,"cereal_yield_kg_ha":1745.4,"ndvi_season_mean":0.134,"yield_lag1":1713.7},{"country_iso3":"IRN","country_name":"Iran","year":2013,"cereal_yield_kg_ha":1847.1,"ndvi_season_mean":0.154,"yield_lag1":1745.4},{"country_iso3":"IRN","country_name":"Iran","year":2014,"cereal_yield_kg_ha":2051.5,"ndvi_season_mean":0.147,"yield_lag1":1847.1},{"country_iso3":"IRN","country_name":"Iran","year":2015,"cereal_yield_kg_ha":2231.0,"ndvi_season_mean":0.148,"yield_lag1":2051.5},{"country_iso3":"IRN","country_name":"Iran","year":2016,"cereal_yield_kg_ha":2653.3,"ndvi_season_mean":0.157,"yield_lag1":2231.0},{"country_iso3":"IRN","country_name":"Iran","year":2017,"cereal_yield_kg_ha":2531.0,"ndvi_season_mean":0.143,"yield_lag1":2653.3},{"country_iso3":"IRN","country_name":"Iran","year":2018,"cereal_yield_kg_ha":2657.3,"ndvi_season_mean":0.147,"yield_lag1":2531.0},{"country_iso3":"IRN","country_name":"Iran","year":2019,"cereal_yield_kg_ha":2653.7,"ndvi_season_mean":0.164,"yield_lag1":2657.3},{"country_iso3":"IRN","country_name":"Iran","year":2020,"cereal_yield_kg_ha":2618.8,"ndvi_season_mean":0.168,"yield_lag1":2653.7},{"country_iso3":"IRN","country_name":"Iran","year":2021,"cereal_yield_kg_ha":2301.5,"ndvi_season_mean":0.149,"yield_lag1":2618.8},{"country_iso3":"IRN","country_name":"Iran","year":2022,"cereal_yield_kg_ha":2317.6,"ndvi_season_mean":0.145,"yield_lag1":2301.5},{"country_iso3":"IRN","country_name":"Iran","year":2023,"cereal_yield_kg_ha":2420.4,"ndvi_season_mean":0.153,"yield_lag1":2317.6},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2002,"cereal_yield_kg_ha":1145.7,"ndvi_season_mean":0.243,"yield_lag1":1216.6},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2003,"cereal_yield_kg_ha":1077.5,"ndvi_season_mean":0.191,"yield_lag1":1145.7},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2004,"cereal_yield_kg_ha":884.3,"ndvi_season_mean":0.209,"yield_lag1":1077.5},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2005,"cereal_yield_kg_ha":998.2,"ndvi_season_mean":0.2,"yield_lag1":884.3},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2006,"cereal_yield_kg_ha":1170.9,"ndvi_season_mean":0.2,"yield_lag1":998.2},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2007,"cereal_yield_kg_ha":1326.9,"ndvi_season_mean":0.21,"yield_lag1":1170.9},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2008,"cereal_yield_kg_ha":1011.3,"ndvi_season_mean":0.188,"yield_lag1":1326.9},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2009,"cereal_yield_kg_ha":1253.1,"ndvi_season_mean":0.198,"yield_lag1":1011.3},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2010,"cereal_yield_kg_ha":804.1,"ndvi_season_mean":0.178,"yield_lag1":1253.1},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2011,"cereal_yield_kg_ha":1688.6,"ndvi_season_mean":0.182,"yield_lag1":804.1},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2012,"cereal_yield_kg_ha":865.1,"ndvi_season_mean":0.181,"yield_lag1":1688.6},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2013,"cereal_yield_kg_ha":1164.9,"ndvi_season_mean":0.199,"yield_lag1":865.1},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2014,"cereal_yield_kg_ha":1172.7,"ndvi_season_mean":0.182,"yield_lag1":1164.9},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2015,"cereal_yield_kg_ha":1275.6,"ndvi_season_mean":0.198,"yield_lag1":1172.7},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2016,"cereal_yield_kg_ha":1347.8,"ndvi_season_mean":0.234,"yield_lag1":1275.6},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2017,"cereal_yield_kg_ha":1355.0,"ndvi_season_mean":0.204,"yield_lag1":1347.8},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2018,"cereal_yield_kg_ha":1359.6,"ndvi_season_mean":0.195,"yield_lag1":1355.0},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2019,"cereal_yield_kg_ha":1147.6,"ndvi_season_mean":0.207,"yield_lag1":1359.6},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2020,"cereal_yield_kg_ha":1282.5,"ndvi_season_mean":0.208,"yield_lag1":1147.6},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2021,"cereal_yield_kg_ha":1038.3,"ndvi_season_mean":0.179,"yield_lag1":1282.5},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2022,"cereal_yield_kg_ha":1371.8,"ndvi_season_mean":0.191,"yield_lag1":1038.3},{"country_iso3":"KAZ","country_name":"Kazakhstan","year":2023,"cereal_yield_kg_ha":1028.4,"ndvi_season_mean":0.189,"yield_lag1":1371.8},{"country_iso3":"NLD","country_name":"Netherlands","year":2002,"cereal_yield_kg_ha":7313.9,"ndvi_season_mean":0.602,"yield_lag1":7280.5},{"country_iso3":"NLD","country_name":"Netherlands","year":2003,"cereal_yield_kg_ha":7956.8,"ndvi_season_mean":0.571,"yield_lag1":7313.9},{"country_iso3":"NLD","country_name":"Netherlands","year":2004,"cereal_yield_kg_ha":8066.3,"ndvi_season_mean":0.579,"yield_lag1":7956.8},{"country_iso3":"NLD","country_name":"Netherlands","year":2005,"cereal_yield_kg_ha":7879.7,"ndvi_season_mean":0.598,"yield_lag1":8066.3},{"country_iso3":"NLD","country_name":"Netherlands","year":2006,"cereal_yield_kg_ha":7854.2,"ndvi_season_mean":0.551,"yield_lag1":7879.7},{"country_iso3":"NLD","country_name":"Netherlands","year":2007,"cereal_yield_kg_ha":7289.7,"ndvi_season_mean":0.627,"yield_lag1":7854.2},{"country_iso3":"NLD","country_name":"Netherlands","year":2008,"cereal_yield_kg_ha":8332.3,"ndvi_season_mean":0.605,"yield_lag1":7289.7},{"country_iso3":"NLD","country_name":"Netherlands","year":2009,"cereal_yield_kg_ha":9032.9,"ndvi_season_mean":0.585,"yield_lag1":8332.3},{"country_iso3":"NLD","country_name":"Netherlands","year":2010,"cereal_yield_kg_ha":8569.3,"ndvi_season_mean":0.533,"yield_lag1":9032.9},{"country_iso3":"NLD","country_name":"Netherlands","year":2011,"cereal_yield_kg_ha":7800.8,"ndvi_season_mean":0.593,"yield_lag1":8569.3},{"country_iso3":"NLD","country_name":"Netherlands","year":2012,"cereal_yield_kg_ha":8545.0,"ndvi_season_mean":0.563,"yield_lag1":7800.8},{"country_iso3":"NLD","country_name":"Netherlands","year":2013,"cereal_yield_kg_ha":8630.1,"ndvi_season_mean":0.554,"yield_lag1":8545.0},{"country_iso3":"NLD","country_name":"Netherlands","year":2014,"cereal_yield_kg_ha":9073.7,"ndvi_season_mean":0.636,"yield_lag1":8630.1},{"country_iso3":"NLD","country_name":"Netherlands","year":2015,"cereal_yield_kg_ha":8752.8,"ndvi_season_mean":0.602,"yield_lag1":9073.7},{"country_iso3":"NLD","country_name":"Netherlands","year":2016,"cereal_yield_kg_ha":7776.9,"ndvi_season_mean":0.616,"yield_lag1":8752.8},{"country_iso3":"NLD","country_name":"Netherlands","year":2017,"cereal_yield_kg_ha":8794.5,"ndvi_season_mean":0.601,"yield_lag1":7776.9},{"country_iso3":"NLD","country_name":"Netherlands","year":2018,"cereal_yield_kg_ha":7927.3,"ndvi_season_mean":0.595,"yield_lag1":8794.5},{"country_iso3":"NLD","country_name":"Netherlands","year":2019,"cereal_yield_kg_ha":8676.6,"ndvi_season_mean":0.626,"yield_lag1":7927.3},{"country_iso3":"NLD","country_name":"Netherlands","year":2020,"cereal_yield_kg_ha":7944.3,"ndvi_season_mean":0.622,"yield_lag1":8676.6},{"country_iso3":"NLD","country_name":"Netherlands","year":2021,"cereal_yield_kg_ha":7850.7,"ndvi_season_mean":0.565,"yield_lag1":7944.3},{"country_iso3":"NLD","country_name":"Netherlands","year":2022,"cereal_yield_kg_ha":8860.0,"ndvi_season_mean":0.623,"yield_lag1":7850.7},{"country_iso3":"NLD","country_name":"Netherlands","year":2023,"cereal_yield_kg_ha":8079.5,"ndvi_season_mean":0.631,"yield_lag1":8860.0},{"country_iso3":"PAK","country_name":"Pakistan","year":2002,"cereal_yield_kg_ha":2260.2,"ndvi_season_mean":0.155,"yield_lag1":2230.5},{"country_iso3":"PAK","country_name":"Pakistan","year":2003,"cereal_yield_kg_ha":2320.6,"ndvi_season_mean":0.16,"yield_lag1":2260.2},{"country_iso3":"PAK","country_name":"Pakistan","year":2004,"cereal_yield_kg_ha":2430.7,"ndvi_season_mean":0.169,"yield_lag1":2320.6},{"country_iso3":"PAK","country_name":"Pakistan","year":2005,"cereal_yield_kg_ha":2615.8,"ndvi_season_mean":0.178,"yield_lag1":2430.7},{"country_iso3":"PAK","country_name":"Pakistan","year":2006,"cereal_yield_kg_ha":2554.0,"ndvi_season_mean":0.166,"yield_lag1":2615.8},{"country_iso3":"PAK","country_name":"Pakistan","year":2007,"cereal_yield_kg_ha":2743.9,"ndvi_season_mean":0.196,"yield_lag1":2554.0},{"country_iso3":"PAK","country_name":"Pakistan","year":2008,"cereal_yield_kg_ha":2653.7,"ndvi_season_mean":0.172,"yield_lag1":2743.9},{"country_iso3":"PAK","country_name":"Pakistan","year":2009,"cereal_yield_kg_ha":2789.7,"ndvi_season_mean":0.176,"yield_lag1":2653.7},{"country_iso3":"PAK","country_name":"Pakistan","year":2010,"cereal_yield_kg_ha":2611.0,"ndvi_season_mean":0.167,"yield_lag1":2789.7},{"country_iso3":"PAK","country_name":"Pakistan","year":2011,"cereal_yield_kg_ha":2953.4,"ndvi_season_mean":0.187,"yield_lag1":2611.0},{"country_iso3":"PAK","country_name":"Pakistan","year":2012,"cereal_yield_kg_ha":2862.6,"ndvi_season_mean":0.171,"yield_lag1":2953.4},{"country_iso3":"PAK","country_name":"Pakistan","year":2013,"cereal_yield_kg_ha":3001.3,"ndvi_season_mean":0.192,"yield_lag1":2862.6},{"country_iso3":"PAK","country_name":"Pakistan","year":2014,"cereal_yield_kg_ha":3001.2,"ndvi_season_mean":0.186,"yield_lag1":3001.3},{"country_iso3":"PAK","country_name":"Pakistan","year":2015,"cereal_yield_kg_ha":2942.4,"ndvi_season_mean":0.186,"yield_lag1":3001.2},{"country_iso3":"PAK","country_name":"Pakistan","year":2016,"cereal_yield_kg_ha":3020.7,"ndvi_season_mean":0.187,"yield_lag1":2942.4},{"country_iso3":"PAK","country_name":"Pakistan","year":2017,"cereal_yield_kg_ha":3180.4,"ndvi_season_mean":0.184,"yield_lag1":3020.7},{"country_iso3":"PAK","country_name":"Pakistan","year":2018,"cereal_yield_kg_ha":3149.0,"ndvi_season_mean":0.179,"yield_lag1":3180.4},{"country_iso3":"PAK","country_name":"Pakistan","year":2019,"cereal_yield_kg_ha":3160.6,"ndvi_season_mean":0.19,"yield_lag1":3149.0},{"country_iso3":"PAK","country_name":"Pakistan","year":2020,"cereal_yield_kg_ha":3353.4,"ndvi_season_mean":0.206,"yield_lag1":3160.6},{"country_iso3":"PAK","country_name":"Pakistan","year":2021,"cereal_yield_kg_ha":3489.4,"ndvi_season_mean":0.189,"yield_lag1":3353.4},{"country_iso3":"PAK","country_name":"Pakistan","year":2022,"cereal_yield_kg_ha":3463.0,"ndvi_season_mean":0.186,"yield_lag1":3489.4},{"country_iso3":"PAK","country_name":"Pakistan","year":2023,"cereal_yield_kg_ha":3634.0,"ndvi_season_mean":0.208,"yield_lag1":3463.0},{"country_iso3":"TJK","country_name":"Tajikistan","year":2002,"cereal_yield_kg_ha":1889.3,"ndvi_season_mean":0.124,"yield_lag1":1397.9},{"country_iso3":"TJK","country_name":"Tajikistan","year":2003,"cereal_yield_kg_ha":2100.6,"ndvi_season_mean":0.121,"yield_lag1":1889.3},{"country_iso3":"TJK","country_name":"Tajikistan","year":2004,"cereal_yield_kg_ha":2150.4,"ndvi_season_mean":0.131,"yield_lag1":2100.6},{"country_iso3":"TJK","country_name":"Tajikistan","year":2005,"cereal_yield_kg_ha":2164.4,"ndvi_season_mean":0.117,"yield_lag1":2150.4},{"country_iso3":"TJK","country_name":"Tajikistan","year":2006,"cereal_yield_kg_ha":2158.7,"ndvi_season_mean":0.129,"yield_lag1":2164.4},{"country_iso3":"TJK","country_name":"Tajikistan","year":2007,"cereal_yield_kg_ha":2440.0,"ndvi_season_mean":0.139,"yield_lag1":2158.7},{"country_iso3":"TJK","country_name":"Tajikistan","year":2008,"cereal_yield_kg_ha":2141.0,"ndvi_season_mean":0.118,"yield_lag1":2440.0},{"country_iso3":"TJK","country_name":"Tajikistan","year":2009,"cereal_yield_kg_ha":3119.4,"ndvi_season_mean":0.125,"yield_lag1":2141.0},{"country_iso3":"TJK","country_name":"Tajikistan","year":2010,"cereal_yield_kg_ha":3117.2,"ndvi_season_mean":0.133,"yield_lag1":3119.4},{"country_iso3":"TJK","country_name":"Tajikistan","year":2011,"cereal_yield_kg_ha":2519.3,"ndvi_season_mean":0.125,"yield_lag1":3117.2},{"country_iso3":"TJK","country_name":"Tajikistan","year":2012,"cereal_yield_kg_ha":2891.1,"ndvi_season_mean":0.119,"yield_lag1":2519.3},{"country_iso3":"TJK","country_name":"Tajikistan","year":2013,"cereal_yield_kg_ha":3159.4,"ndvi_season_mean":0.14,"yield_lag1":2891.1},{"country_iso3":"TJK","country_name":"Tajikistan","year":2014,"cereal_yield_kg_ha":3189.4,"ndvi_season_mean":0.125,"yield_lag1":3159.4},{"country_iso3":"TJK","country_name":"Tajikistan","year":2015,"cereal_yield_kg_ha":3261.0,"ndvi_season_mean":0.138,"yield_lag1":3189.4},{"country_iso3":"TJK","country_name":"Tajikistan","year":2016,"cereal_yield_kg_ha":3348.7,"ndvi_season_mean":0.149,"yield_lag1":3261.0},{"country_iso3":"TJK","country_name":"Tajikistan","year":2017,"cereal_yield_kg_ha":3459.5,"ndvi_season_mean":0.126,"yield_lag1":3348.7},{"country_iso3":"TJK","country_name":"Tajikistan","year":2018,"cereal_yield_kg_ha":3404.4,"ndvi_season_mean":0.132,"yield_lag1":3459.5},{"country_iso3":"TJK","country_name":"Tajikistan","year":2019,"cereal_yield_kg_ha":3636.7,"ndvi_season_mean":0.14,"yield_lag1":3404.4},{"country_iso3":"TJK","country_name":"Tajikistan","year":2020,"cereal_yield_kg_ha":3525.6,"ndvi_season_mean":0.143,"yield_lag1":3636.7},{"country_iso3":"TJK","country_name":"Tajikistan","year":2021,"cereal_yield_kg_ha":3885.1,"ndvi_season_mean":0.127,"yield_lag1":3525.6},{"country_iso3":"TJK","country_name":"Tajikistan","year":2022,"cereal_yield_kg_ha":3926.0,"ndvi_season_mean":0.144,"yield_lag1":3885.1},{"country_iso3":"TJK","country_name":"Tajikistan","year":2023,"cereal_yield_kg_ha":3732.8,"ndvi_season_mean":0.139,"yield_lag1":3926.0},{"country_iso3":"TUR","country_name":"Turkiye","year":2002,"cereal_yield_kg_ha":2242.0,"ndvi_season_mean":0.344,"yield_lag1":2178.3},{"country_iso3":"TUR","country_name":"Turkiye","year":2003,"cereal_yield_kg_ha":2308.6,"ndvi_season_mean":0.326,"yield_lag1":2242.0},{"country_iso3":"TUR","country_name":"Turkiye","year":2004,"cereal_yield_kg_ha":2477.9,"ndvi_season_mean":0.356,"yield_lag1":2308.6},{"country_iso3":"TUR","country_name":"Turkiye","year":2005,"cereal_yield_kg_ha":2634.5,"ndvi_season_mean":0.345,"yield_lag1":2477.9},{"country_iso3":"TUR","country_name":"Turkiye","year":2006,"cereal_yield_kg_ha":2661.9,"ndvi_season_mean":0.354,"yield_lag1":2634.5},{"country_iso3":"TUR","country_name":"Turkiye","year":2007,"cereal_yield_kg_ha":2410.2,"ndvi_season_mean":0.349,"yield_lag1":2661.9},{"country_iso3":"TUR","country_name":"Turkiye","year":2008,"cereal_yield_kg_ha":2601.3,"ndvi_season_mean":0.342,"yield_lag1":2410.2},{"country_iso3":"TUR","country_name":"Turkiye","year":2009,"cereal_yield_kg_ha":2807.8,"ndvi_season_mean":0.376,"yield_lag1":2601.3},{"country_iso3":"TUR","country_name":"Turkiye","year":2010,"cereal_yield_kg_ha":2725.6,"ndvi_season_mean":0.398,"yield_lag1":2807.8},{"country_iso3":"TUR","country_name":"Turkiye","year":2011,"cereal_yield_kg_ha":2970.0,"ndvi_season_mean":0.398,"yield_lag1":2725.6},{"country_iso3":"TUR","country_name":"Turkiye","year":2012,"cereal_yield_kg_ha":2958.4,"ndvi_season_mean":0.328,"yield_lag1":2970.0},{"country_iso3":"TUR","country_name":"Turkiye","year":2013,"cereal_yield_kg_ha":3256.9,"ndvi_season_mean":0.414,"yield_lag1":2958.4},{"country_iso3":"TUR","country_name":"Turkiye","year":2014,"cereal_yield_kg_ha":2832.1,"ndvi_season_mean":0.394,"yield_lag1":3256.9},{"country_iso3":"TUR","country_name":"Turkiye","year":2015,"cereal_yield_kg_ha":3307.8,"ndvi_season_mean":0.415,"yield_lag1":2832.1},{"country_iso3":"TUR","country_name":"Turkiye","year":2016,"cereal_yield_kg_ha":3105.4,"ndvi_season_mean":0.405,"yield_lag1":3307.8},{"country_iso3":"TUR","country_name":"Turkiye","year":2017,"cereal_yield_kg_ha":3257.4,"ndvi_season_mean":0.37,"yield_lag1":3105.4},{"country_iso3":"TUR","country_name":"Turkiye","year":2018,"cereal_yield_kg_ha":3163.9,"ndvi_season_mean":0.434,"yield_lag1":3257.4},{"country_iso3":"TUR","country_name":"Turkiye","year":2019,"cereal_yield_kg_ha":3200.8,"ndvi_season_mean":0.396,"yield_lag1":3163.9},{"country_iso3":"TUR","country_name":"Turkiye","year":2020,"cereal_yield_kg_ha":3341.5,"ndvi_season_mean":0.394,"yield_lag1":3200.8},{"country_iso3":"TUR","country_name":"Turkiye","year":2021,"cereal_yield_kg_ha":2918.5,"ndvi_season_mean":0.386,"yield_lag1":3341.5},{"country_iso3":"TUR","country_name":"Turkiye","year":2022,"cereal_yield_kg_ha":3464.7,"ndvi_season_mean":0.352,"yield_lag1":2918.5},{"country_iso3":"TUR","country_name":"Turkiye","year":2023,"cereal_yield_kg_ha":3659.1,"ndvi_season_mean":0.409,"yield_lag1":3464.7},{"country_iso3":"UKR","country_name":"Ukraine","year":2002,"cereal_yield_kg_ha":2752.2,"ndvi_season_mean":0.509,"yield_lag1":2729.5},{"country_iso3":"UKR","country_name":"Ukraine","year":2003,"cereal_yield_kg_ha":2278.4,"ndvi_season_mean":0.359,"yield_lag1":2752.2},{"country_iso3":"UKR","country_name":"Ukraine","year":2004,"cereal_yield_kg_ha":2845.2,"ndvi_season_mean":0.443,"yield_lag1":2278.4},{"country_iso3":"UKR","country_name":"Ukraine","year":2005,"cereal_yield_kg_ha":2623.0,"ndvi_season_mean":0.414,"yield_lag1":2845.2},{"country_iso3":"UKR","country_name":"Ukraine","year":2006,"cereal_yield_kg_ha":2427.7,"ndvi_season_mean":0.4,"yield_lag1":2623.0},{"country_iso3":"UKR","country_name":"Ukraine","year":2007,"cereal_yield_kg_ha":2206.7,"ndvi_season_mean":0.461,"yield_lag1":2427.7},{"country_iso3":"UKR","country_name":"Ukraine","year":2008,"cereal_yield_kg_ha":3486.9,"ndvi_season_mean":0.525,"yield_lag1":2206.7},{"country_iso3":"UKR","country_name":"Ukraine","year":2009,"cereal_yield_kg_ha":3003.8,"ndvi_season_mean":0.465,"yield_lag1":3486.9},{"country_iso3":"UKR","country_name":"Ukraine","year":2010,"cereal_yield_kg_ha":2726.6,"ndvi_season_mean":0.421,"yield_lag1":3003.8},{"country_iso3":"UKR","country_name":"Ukraine","year":2011,"cereal_yield_kg_ha":3753.7,"ndvi_season_mean":0.445,"yield_lag1":2726.6},{"country_iso3":"UKR","country_name":"Ukraine","year":2012,"cereal_yield_kg_ha":3156.8,"ndvi_season_mean":0.409,"yield_lag1":3753.7},{"country_iso3":"UKR","country_name":"Ukraine","year":2013,"cereal_yield_kg_ha":4030.8,"ndvi_season_mean":0.438,"yield_lag1":3156.8},{"country_iso3":"UKR","country_name":"Ukraine","year":2014,"cereal_yield_kg_ha":4400.2,"ndvi_season_mean":0.506,"yield_lag1":4030.8},{"country_iso3":"UKR","country_name":"Ukraine","year":2015,"cereal_yield_kg_ha":4140.9,"ndvi_season_mean":0.473,"yield_lag1":4400.2},{"country_iso3":"UKR","country_name":"Ukraine","year":2016,"cereal_yield_kg_ha":4651.6,"ndvi_season_mean":0.504,"yield_lag1":4140.9},{"country_iso3":"UKR","country_name":"Ukraine","year":2017,"cereal_yield_kg_ha":4314.6,"ndvi_season_mean":0.464,"yield_lag1":4651.6},{"country_iso3":"UKR","country_name":"Ukraine","year":2018,"cereal_yield_kg_ha":4850.3,"ndvi_season_mean":0.423,"yield_lag1":4314.6},{"country_iso3":"UKR","country_name":"Ukraine","year":2019,"cereal_yield_kg_ha":4978.3,"ndvi_season_mean":0.491,"yield_lag1":4850.3},{"country_iso3":"UKR","country_name":"Ukraine","year":2020,"cereal_yield_kg_ha":4295.6,"ndvi_season_mean":0.488,"yield_lag1":4978.3},{"country_iso3":"UKR","country_name":"Ukraine","year":2021,"cereal_yield_kg_ha":5454.6,"ndvi_season_mean":0.461,"yield_lag1":4295.6},{"country_iso3":"UKR","country_name":"Ukraine","year":2022,"cereal_yield_kg_ha":4614.2,"ndvi_season_mean":0.465,"yield_lag1":5454.6},{"country_iso3":"UKR","country_name":"Ukraine","year":2023,"cereal_yield_kg_ha":5578.1,"ndvi_season_mean":0.499,"yield_lag1":4614.2},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2002,"cereal_yield_kg_ha":3765.9,"ndvi_season_mean":0.187,"yield_lag1":3042.9},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2003,"cereal_yield_kg_ha":3522.4,"ndvi_season_mean":0.174,"yield_lag1":3765.9},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2004,"cereal_yield_kg_ha":3596.1,"ndvi_season_mean":0.186,"yield_lag1":3522.4},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2005,"cereal_yield_kg_ha":4042.1,"ndvi_season_mean":0.171,"yield_lag1":3596.1},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2006,"cereal_yield_kg_ha":4103.2,"ndvi_season_mean":0.169,"yield_lag1":4042.1},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2007,"cereal_yield_kg_ha":4396.9,"ndvi_season_mean":0.178,"yield_lag1":4103.2},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2008,"cereal_yield_kg_ha":4285.3,"ndvi_season_mean":0.142,"yield_lag1":4396.9},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2009,"cereal_yield_kg_ha":4553.1,"ndvi_season_mean":0.182,"yield_lag1":4285.3},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2010,"cereal_yield_kg_ha":4434.2,"ndvi_season_mean":0.17,"yield_lag1":4553.1},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2011,"cereal_yield_kg_ha":4414.5,"ndvi_season_mean":0.145,"yield_lag1":4434.2},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2012,"cereal_yield_kg_ha":4597.9,"ndvi_season_mean":0.149,"yield_lag1":4414.5},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2013,"cereal_yield_kg_ha":4746.4,"ndvi_season_mean":0.175,"yield_lag1":4597.9},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2014,"cereal_yield_kg_ha":4806.6,"ndvi_season_mean":0.148,"yield_lag1":4746.4},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2015,"cereal_yield_kg_ha":4835.2,"ndvi_season_mean":0.176,"yield_lag1":4806.6},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2016,"cereal_yield_kg_ha":4827.0,"ndvi_season_mean":0.193,"yield_lag1":4835.2},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2017,"cereal_yield_kg_ha":4298.2,"ndvi_season_mean":0.174,"yield_lag1":4827.0},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2018,"cereal_yield_kg_ha":4103.9,"ndvi_season_mean":0.159,"yield_lag1":4298.2},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2019,"cereal_yield_kg_ha":4554.0,"ndvi_season_mean":0.193,"yield_lag1":4103.9},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2020,"cereal_yield_kg_ha":4510.8,"ndvi_season_mean":0.178,"yield_lag1":4554.0},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2021,"cereal_yield_kg_ha":4774.4,"ndvi_season_mean":0.155,"yield_lag1":4510.8},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2022,"cereal_yield_kg_ha":5007.8,"ndvi_season_mean":0.166,"yield_lag1":4774.4},{"country_iso3":"UZB","country_name":"Uzbekistan","year":2023,"cereal_yield_kg_ha":5343.6,"ndvi_season_mean":0.162,"yield_lag1":5007.8}];
+
+const SIM = [{"country_iso3":"AFG","scenario":"driest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":2116.8,"p50_kg_ha":2307.6,"p90_kg_ha":2318.3,"mean_kg_ha":2237.8,"prob_below_last_year":0.5,"latest_observed_yield_kg_ha":2303.0},{"country_iso3":"AFG","scenario":"all_years","n_historical_seasons_in_pool":22,"p10_kg_ha":2172.9,"p50_kg_ha":2315.1,"p90_kg_ha":2368.1,"mean_kg_ha":2295.7,"prob_below_last_year":0.3,"latest_observed_yield_kg_ha":2303.0},{"country_iso3":"AFG","scenario":"wettest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":2333.5,"p50_kg_ha":2366.3,"p90_kg_ha":2467.1,"mean_kg_ha":2371.2,"prob_below_last_year":0.0,"latest_observed_yield_kg_ha":2303.0},{"country_iso3":"IRN","scenario":"driest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":2033.0,"p50_kg_ha":2239.6,"p90_kg_ha":2366.3,"mean_kg_ha":2259.7,"prob_below_last_year":1.0,"latest_observed_yield_kg_ha":2420.4},{"country_iso3":"IRN","scenario":"all_years","n_historical_seasons_in_pool":22,"p10_kg_ha":2187.2,"p50_kg_ha":2381.3,"p90_kg_ha":2419.0,"mean_kg_ha":2346.0,"prob_below_last_year":0.9,"latest_observed_yield_kg_ha":2420.4},{"country_iso3":"IRN","scenario":"wettest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":2330.4,"p50_kg_ha":2417.0,"p90_kg_ha":2433.9,"mean_kg_ha":2406.6,"prob_below_last_year":0.8,"latest_observed_yield_kg_ha":2420.4},{"country_iso3":"KAZ","scenario":"driest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":996.7,"p50_kg_ha":1019.5,"p90_kg_ha":1447.1,"mean_kg_ha":1103.3,"prob_below_last_year":0.5,"latest_observed_yield_kg_ha":1028.4},{"country_iso3":"KAZ","scenario":"all_years","n_historical_seasons_in_pool":22,"p10_kg_ha":1016.5,"p50_kg_ha":1160.8,"p90_kg_ha":1301.6,"mean_kg_ha":1160.0,"prob_below_last_year":0.2,"latest_observed_yield_kg_ha":1028.4},{"country_iso3":"KAZ","scenario":"wettest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":1045.0,"p50_kg_ha":1172.6,"p90_kg_ha":1391.2,"mean_kg_ha":1200.7,"prob_below_last_year":0.0,"latest_observed_yield_kg_ha":1028.4},{"country_iso3":"NLD","scenario":"driest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":8045.8,"p50_kg_ha":8121.2,"p90_kg_ha":8625.9,"mean_kg_ha":8244.7,"prob_below_last_year":0.2,"latest_observed_yield_kg_ha":8079.5},{"country_iso3":"NLD","scenario":"all_years","n_historical_seasons_in_pool":22,"p10_kg_ha":7831.8,"p50_kg_ha":8210.7,"p90_kg_ha":8582.1,"mean_kg_ha":8216.8,"prob_below_last_year":0.3,"latest_observed_yield_kg_ha":8079.5},{"country_iso3":"NLD","scenario":"wettest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":7662.0,"p50_kg_ha":8436.6,"p90_kg_ha":8662.5,"mean_kg_ha":8264.2,"prob_below_last_year":0.2,"latest_observed_yield_kg_ha":8079.5},{"country_iso3":"PAK","scenario":"driest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":3575.2,"p50_kg_ha":3605.5,"p90_kg_ha":3705.0,"mean_kg_ha":3613.6,"prob_below_last_year":0.9,"latest_observed_yield_kg_ha":3634.0},{"country_iso3":"PAK","scenario":"all_years","n_historical_seasons_in_pool":22,"p10_kg_ha":3378.2,"p50_kg_ha":3474.0,"p90_kg_ha":3606.4,"mean_kg_ha":3490.7,"prob_below_last_year":1.0,"latest_observed_yield_kg_ha":3634.0},{"country_iso3":"PAK","scenario":"wettest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":3368.1,"p50_kg_ha":3449.0,"p90_kg_ha":3475.4,"mean_kg_ha":3430.5,"prob_below_last_year":1.0,"latest_observed_yield_kg_ha":3634.0},{"country_iso3":"TJK","scenario":"driest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":3264.5,"p50_kg_ha":3435.5,"p90_kg_ha":3580.0,"mean_kg_ha":3400.6,"prob_below_last_year":1.0,"latest_observed_yield_kg_ha":3732.8},{"country_iso3":"TJK","scenario":"all_years","n_historical_seasons_in_pool":22,"p10_kg_ha":3301.4,"p50_kg_ha":3459.7,"p90_kg_ha":3540.4,"mean_kg_ha":3445.6,"prob_below_last_year":1.0,"latest_observed_yield_kg_ha":3732.8},{"country_iso3":"TJK","scenario":"wettest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":3391.0,"p50_kg_ha":3461.3,"p90_kg_ha":3540.4,"mean_kg_ha":3468.6,"prob_below_last_year":1.0,"latest_observed_yield_kg_ha":3732.8},{"country_iso3":"TUR","scenario":"driest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":3297.1,"p50_kg_ha":3348.9,"p90_kg_ha":3418.3,"mean_kg_ha":3348.2,"prob_below_last_year":1.0,"latest_observed_yield_kg_ha":3659.1},{"country_iso3":"TUR","scenario":"all_years","n_historical_seasons_in_pool":22,"p10_kg_ha":3302.6,"p50_kg_ha":3367.0,"p90_kg_ha":3425.6,"mean_kg_ha":3365.0,"prob_below_last_year":1.0,"latest_observed_yield_kg_ha":3659.1},{"country_iso3":"TUR","scenario":"wettest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":3332.7,"p50_kg_ha":3417.6,"p90_kg_ha":3449.7,"mean_kg_ha":3396.0,"prob_below_last_year":1.0,"latest_observed_yield_kg_ha":3659.1},{"country_iso3":"UKR","scenario":"driest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":4594.8,"p50_kg_ha":4659.7,"p90_kg_ha":4681.3,"mean_kg_ha":4653.0,"prob_below_last_year":1.0,"latest_observed_yield_kg_ha":5578.1},{"country_iso3":"UKR","scenario":"all_years","n_historical_seasons_in_pool":22,"p10_kg_ha":4533.9,"p50_kg_ha":4615.0,"p90_kg_ha":4681.2,"mean_kg_ha":4617.7,"prob_below_last_year":1.0,"latest_observed_yield_kg_ha":5578.1},{"country_iso3":"UKR","scenario":"wettest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":4473.4,"p50_kg_ha":4607.1,"p90_kg_ha":4816.0,"mean_kg_ha":4604.1,"prob_below_last_year":1.0,"latest_observed_yield_kg_ha":5578.1},{"country_iso3":"UZB","scenario":"driest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":4514.2,"p50_kg_ha":4532.0,"p90_kg_ha":4678.5,"mean_kg_ha":4566.2,"prob_below_last_year":1.0,"latest_observed_yield_kg_ha":5343.6},{"country_iso3":"UZB","scenario":"all_years","n_historical_seasons_in_pool":22,"p10_kg_ha":4527.1,"p50_kg_ha":4598.6,"p90_kg_ha":4714.4,"mean_kg_ha":4610.0,"prob_below_last_year":1.0,"latest_observed_yield_kg_ha":5343.6},{"country_iso3":"UZB","scenario":"wettest_tercile","n_historical_seasons_in_pool":8,"p10_kg_ha":4583.5,"p50_kg_ha":4701.7,"p90_kg_ha":4733.2,"mean_kg_ha":4659.8,"prob_below_last_year":1.0,"latest_observed_yield_kg_ha":5343.6}];
+
+const MODELS = [
+  {key:"fixed_effects", label:"Fixed-effects (country dummies)", mae:276.1, rmse:368.0, r2:0.965, best:true},
+  {key:"random_forest",  label:"Random forest",                   mae:266.2, rmse:370.2, r2:0.965, best:true},
+  {key:"ridge",          label:"Ridge",                           mae:306.6, rmse:400.2, r2:0.959, best:false},
+  {key:"xgboost",        label:"XGBoost",                         mae:295.4, rmse:409.8, r2:0.957, best:false},
+  {key:"baseline_lag1",  label:"Baseline (yield = last year)",    mae:299.5, rmse:421.7, r2:0.954, baseline:true},
+  {key:"lightgbm",       label:"LightGBM",                        mae:461.8, rmse:735.6, r2:0.861, best:false},
+];
+
+const FEATURES = [
+  {label:"ndvi_season_mean",       v:0.547},
+  {label:"yield_lag1",             v:0.424},
+  {label:"evi_season_mean",        v:0.010},
+  {label:"season_temp_mean_c",     v:0.008},
+  {label:"season_precip_total_mm", v:0.006},
+  {label:"ndvi_season_max",        v:0.005},
+];
+
+const NAME_FIX = {IRN:"Iran"};
+function dispName(row){ return NAME_FIX[row.country_iso3] || row.country_name; }
+
+/* ---------- model bar chart ---------- */
+(function(){
+  const wrap = document.getElementById("modelBars");
+  const max = Math.max(...MODELS.map(m=>m.rmse)) * 1.03;
+  MODELS.forEach(m=>{
+    const row = document.createElement("div");
+    row.className = "barrow" + (m.best?" best":"") + (m.baseline?" baseline":"");
+    row.innerHTML = `
+      <div class="lbl">${m.label}</div>
+      <div class="bartrack"><div class="barfill" style="width:${(m.rmse/max*100).toFixed(1)}%"></div></div>
+      <div class="barval">${m.rmse.toFixed(1)}</div>`;
+    wrap.appendChild(row);
+  });
+
+  const table = document.getElementById("modelTable");
+  table.innerHTML = `<thead><tr><th>Model</th><th style="text-align:right">MAE (kg/ha)</th><th style="text-align:right">RMSE (kg/ha)</th><th style="text-align:right">R&sup2;</th></tr></thead>
+    <tbody>${MODELS.slice().sort((a,b)=>a.rmse-b.rmse).map(m=>`<tr class="${m.best?'best':''}"><td>${m.label}</td><td class="num">${m.mae.toFixed(1)}</td><td class="num">${m.rmse.toFixed(1)}</td><td class="num">${m.r2.toFixed(3)}</td></tr>`).join("")}</tbody>`;
+})();
+
+/* ---------- feature importance chart ---------- */
+(function(){
+  const wrap = document.getElementById("fiBars");
+  const max = FEATURES[0].v * 1.05;
+  FEATURES.forEach(f=>{
+    const row = document.createElement("div");
+    row.className = "barrow";
+    row.innerHTML = `
+      <div class="lbl mono">${f.label}</div>
+      <div class="bartrack fi-track"><div class="barfill fi-fill" style="width:${(f.v/max*100).toFixed(1)}%"></div></div>
+      <div class="barval">${(f.v*100).toFixed(1)}%</div>`;
+    wrap.appendChild(row);
+  });
+})();
+
+/* ---------- simulator ---------- */
+const COUNTRIES = [...new Set(SIM.map(r=>r.country_iso3))];
+const COUNTRY_LABEL = Object.fromEntries(PANEL.map(r=>[r.country_iso3, dispName(r)]));
+let currentCountry = "AFG";
+
+function renderChips(){
+  const wrap = document.getElementById("countryChips");
+  wrap.innerHTML = "";
+  COUNTRIES.forEach(c=>{
+    const b = document.createElement("button");
+    b.className = "chip" + (c===currentCountry?" on":"");
+    b.textContent = COUNTRY_LABEL[c] || c;
+    b.onclick = ()=>{ currentCountry = c; renderChips(); renderSim(); };
+    wrap.appendChild(b);
+  });
+}
+
+const SCEN_ORDER = ["driest_tercile","all_years","wettest_tercile"];
+const SCEN_LABEL = {driest_tercile:"Driest third", all_years:"All seasons", wettest_tercile:"Wettest third"};
+const SCEN_COLOR_VAR = {driest_tercile:"--dry", all_years:"--typical", wettest_tercile:"--wet"};
+
+function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+function renderSim(){
+  const rows = SIM.filter(r=>r.country_iso3===currentCountry);
+  const latest = rows[0].latest_observed_yield_kg_ha;
+  document.getElementById("simCountryName").textContent = COUNTRY_LABEL[currentCountry] || currentCountry;
+  document.getElementById("simActual").textContent = `most recent actual: ${latest.toLocaleString()} kg/ha`;
+
+  const allVals = rows.flatMap(r=>[r.p10_kg_ha, r.p90_kg_ha]).concat([latest]);
+  const lo = Math.min(...allVals) * 0.98, hi = Math.max(...allVals) * 1.02;
+  const W = 760, H = 168, ML = 14, MR = 14, rowH = 46, top = 14;
+  const x = v => ML + (v-lo)/(hi-lo) * (W-ML-MR);
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" style="overflow:visible" role="img" aria-label="Yield scenario distributions for ${COUNTRY_LABEL[currentCountry]}">`;
+
+  // reference line: latest actual
+  const rx = x(latest);
+  svg += `<line x1="${rx}" y1="${top-6}" x2="${rx}" y2="${top + rowH*3 + 4}" stroke="${css('--ink-muted')}" stroke-width="1.4" stroke-dasharray="3,3"/>`;
+  svg += `<text x="${rx}" y="${top-10}" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="${css('--ink-muted')}" text-anchor="middle">2023 actual</text>`;
+
+  SCEN_ORDER.forEach((scen, i)=>{
+    const r = rows.find(rr=>rr.scenario===scen);
+    if(!r) return;
+    const cy = top + rowH*i + rowH/2 + 6;
+    const color = css(SCEN_COLOR_VAR[scen]);
+    const x10 = x(r.p10_kg_ha), x50 = x(r.p50_kg_ha), x90 = x(r.p90_kg_ha);
+    svg += `<line x1="${x10}" y1="${cy}" x2="${x90}" y2="${cy}" stroke="${color}" stroke-width="6" stroke-linecap="round"/>`;
+    svg += `<circle cx="${x50}" cy="${cy}" r="6" fill="${color}" stroke="${css('--surface')}" stroke-width="2"/>`;
+    svg += `<text x="${ML}" y="${cy-14}" font-family="Public Sans, sans-serif" font-size="12.5" font-weight="600" fill="${css('--ink')}">${SCEN_LABEL[scen]}</text>`;
+    svg += `<text x="${ML}" y="${cy+20}" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="${css('--ink-muted')}">P10 ${r.p10_kg_ha.toFixed(0)} · P50 ${r.p50_kg_ha.toFixed(0)} · P90 ${r.p90_kg_ha.toFixed(0)} · n=${r.n_historical_seasons_in_pool}</text>`;
+    svg += `<text x="${W-MR}" y="${cy-14}" font-family="IBM Plex Mono, monospace" font-size="12" fill="${color}" text-anchor="end" font-weight="600">${(r.prob_below_last_year*100).toFixed(0)}% below 2023</text>`;
+    svg += `<title>${SCEN_LABEL[scen]}: P10 ${r.p10_kg_ha.toFixed(0)}, P50 ${r.p50_kg_ha.toFixed(0)}, P90 ${r.p90_kg_ha.toFixed(0)} kg/ha; ${(r.prob_below_last_year*100).toFixed(0)}% chance below last year's ${latest.toFixed(0)} kg/ha (n=${r.n_historical_seasons_in_pool} real seasons)</title>`;
+  });
+
+  svg += `</svg>`;
+  document.getElementById("simSvgWrap").innerHTML = svg;
+
+  const trendUp = new Set(["TJK","TUR","UKR","UZB"]);
+  const cav = document.getElementById("simCaveat");
+  if(trendUp.has(currentCountry)){
+    cav.innerHTML = `<strong>Caveat for ${COUNTRY_LABEL[currentCountry]}:</strong> recent yield is near this country's historical high (sustained intensification trend), while the simulator resamples NDVI/weather from the full 2002–2023 record. That inflates "% below last year" — read it as directional, not a calibrated probability, until the pool is restricted to recent years.`;
+  } else {
+    cav.innerHTML = `<strong>Sample-size caveat:</strong> the driest/wettest tercile pools are bootstrapped from just 8 real historical seasons for ${COUNTRY_LABEL[currentCountry]} — informative direction, not a precise probability, and can't represent a scenario more extreme than anything in the 2002–2023 record.`;
+  }
+}
+
+renderChips();
+renderSim();
+
+/* ---------- trend small multiples ---------- */
+(function(){
+  const wrap = document.getElementById("trendGrid");
+  const byCountry = {};
+  PANEL.forEach(r=>{ (byCountry[r.country_iso3] = byCountry[r.country_iso3]||[]).push(r); });
+  const order = ["AFG","PAK","IRN","UZB","TJK","KAZ","TUR","UKR","NLD"];
+  order.forEach(iso=>{
+    const rows = byCountry[iso].sort((a,b)=>a.year-b.year);
+    const vals = rows.map(r=>r.cereal_yield_kg_ha);
+    const lo = Math.min(...vals), hi = Math.max(...vals);
+    const W=220, H=52, pad=4;
+    const x = i => pad + i/(rows.length-1) * (W-2*pad);
+    const y = v => H-pad - (v-lo)/(hi-lo||1) * (H-2*pad);
+    const path = rows.map((r,i)=> (i===0?"M":"L") + x(i).toFixed(1) + "," + y(r.cereal_yield_kg_ha).toFixed(1)).join(" ");
+    const lastX = x(rows.length-1), lastY = y(vals[vals.length-1]);
+    const card = document.createElement("div");
+    card.className = "trend-card";
+    card.innerHTML = `
+      <div class="th"><span class="name">${COUNTRY_LABEL[iso]}</span><span class="iso">${iso}</span></div>
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${COUNTRY_LABEL[iso]} cereal yield 2002-2023">
+        <path d="${path}" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="${lastX}" cy="${lastY}" r="2.6" fill="var(--gold)"/>
+        <title>${COUNTRY_LABEL[iso]}: ${lo.toFixed(0)}–${hi.toFixed(0)} kg/ha, 2002-2023</title>
+      </svg>
+      <div class="range"><span>${lo.toFixed(0)}</span><span>${hi.toFixed(0)} kg/ha</span></div>`;
+    wrap.appendChild(card);
+  });
+})();
+</script>
+
+</body>
+</html>

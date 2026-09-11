@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Cereal yield forecasting for 9 wheat-belt countries from satellite + weather data — results report and interactive map.">
+<title>Cereal Yield Satellite Forecast</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%BE%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#F7F7F1; --surface:#FFFFFF; --ink:#1B1F17; --ink-2:#565F4E; --ink-muted:#8B9284;
+    --border:rgba(27,31,23,0.12); --accent:#3E7D3E; --accent-ink:#245A28; --shadow:0 1px 2px rgba(27,31,23,0.06), 0 8px 24px -12px rgba(27,31,23,0.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#12150F; --surface:#1B2016; --ink:#ECEEE4; --ink-2:#B7BFAE; --ink-muted:#838C7C; --border:rgba(236,238,228,0.13); --accent:#5FBD5F; --accent-ink:#7DD37D; --shadow:0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5); }
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--ink); font-family:"Public Sans",system-ui,sans-serif; font-size:15px; line-height:1.55;}
+  .wrap{max-width:640px; margin:0 auto; padding:64px 24px;}
+  h1{font-family:"Fraunces",Georgia,serif; font-weight:560; font-size:32px; margin-bottom:10px;}
+  p.sub{color:var(--ink-2); margin-bottom:32px; max-width:56ch;}
+  .card{display:block; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px 22px; margin-bottom:14px; text-decoration:none; box-shadow:var(--shadow);}
+  .card .t{font-family:"Fraunces",serif; font-weight:600; font-size:18px; color:var(--ink);}
+  .card .d{font-size:13.5px; color:var(--ink-2); margin-top:4px;}
+  .foot{margin-top:36px; font-size:13px; color:var(--ink-muted);}
+  .foot a{color:var(--ink-2);}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Cereal Yield Satellite Forecast</h1>
+    <p class="sub">Forecasting cereal yield for 9 wheat-belt countries from satellite NDVI/EVI + weather data, with honestly reported metrics and a Monte Carlo scenario simulator.</p>
+
+    <a class="card" href="report.html">
+      <div class="t">🌾 Harvest From Orbit — Results Report</div>
+      <div class="d">Pipeline, 6-model comparison, feature importance, scenario simulator, per-country yield trends.</div>
+    </a>
+    <a class="card" href="atlas.html">
+      <div class="t">🗺️ Grain Belt Atlas — Interactive Map</div>
+      <div class="d">Click any country to see its real satellite/weather source data, yield trend, and drought risk.</div>
+    </a>
+
+    <p class="foot">Source & data: <a href="https://github.com/maiwandalamzoi/cereal-yield-satellite-forecast">github.com/maiwandalamzoi/cereal-yield-satellite-forecast</a> · MIT License</p>
+  </div>
+</body>
+</html>
