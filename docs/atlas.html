@@ -202,7 +202,12 @@ const GRAIN_BELT = {
   DEU:[52.13,11.63,"Magdeburger Borde"], TKM:[37.60,61.83,"Mary"],
 };
 const NAME = {AFG:"Afghanistan",PAK:"Pakistan",IRN:"Iran",KAZ:"Kazakhstan",UZB:"Uzbekistan",TJK:"Tajikistan",TUR:"Turkiye",UKR:"Ukraine",NLD:"Netherlands",CHN:"China",IND:"India",USA:"United States",CAN:"Canada",AUS:"Australia",ARG:"Argentina",EGY:"Egypt",MAR:"Morocco",KGZ:"Kyrgyzstan",AZE:"Azerbaijan",GEO:"Georgia",FRA:"France",DEU:"Germany",TKM:"Turkmenistan"};
-const ISO_ORDER = ["AFG","PAK","IRN","KAZ","UZB","TJK","TUR","UKR","NLD"];
+// Derived from the data, not hand-typed -- a hardcoded 9-country list here
+// once silently stopped rendering the other 14 after the panel was
+// expanded, since every render loop below iterates ISO_ORDER, not the
+// data directly (same bug class the report.html avoided by deriving
+// ISO_ORDER from SIM from the start).
+const ISO_ORDER = [...new Set(SIM.map(r=>r.country_iso3))].sort();
 
 const byCountry = {};
 PANEL.forEach(r=>{ (byCountry[r.country_iso3]=byCountry[r.country_iso3]||[]).push(r); });
