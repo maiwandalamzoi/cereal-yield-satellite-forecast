@@ -5,17 +5,23 @@ indices and weather, across nine wheat-belt countries (Afghanistan, Pakistan,
 Iran, Kazakhstan, Uzbekistan, Tajikistan, Turkiye, Ukraine) plus one
 out-of-regime comparator (Netherlands).
 
-This is a companion project to
-[crop-stress-prediction](https://github.com/maiwandalamzoi/crop-stress-prediction):
-that project detects *anomalies* in vegetation health 2-4 weeks ahead; this
-one asks a different, harder question — can in-season satellite + weather
-signal actually forecast the *yield number* at harvest?
+**Dataset:** 207 real ground-truth yield rows (9 countries × ~23 growing
+seasons, 2001–2023), each joined to satellite (MODIS NDVI/EVI) and weather
+(NASA POWER) features — 198 rows after adding the lag feature, 153 for
+training and 45 held out for testing. See *Method* below for exactly how
+each number was produced and *Results* for what it bought.
 
 **What this is:** a real, trained regression model (XGBoost / Random Forest)
 evaluated on a genuine train/test split, benchmarked against a naive
 lag-1 baseline, with honestly reported metrics.
 **What this is not:** a production yield forecaster. See *Known
 limitations* below before drawing conclusions from the numbers.
+
+*(Unrelated to this repo's own scope, but for context: a separate project,
+[crop-stress-prediction](https://github.com/maiwandalamzoi/crop-stress-prediction),
+detects vegetation-stress anomalies 2–4 weeks ahead rather than forecasting
+the harvest yield number — different question, same satellite-data
+approach.)*
 
 ## Method
 
@@ -146,6 +152,11 @@ Read this before citing the results anywhere:
   enough for strong generalization claims.
 - **No farmer-reported ground truth anywhere in this pipeline** — labels are
   national statistics, not field-level outcomes.
+
+## Dashboards
+
+- **[Harvest From Orbit](https://claude.ai/code/artifact/a8e1c53a-400b-488d-afea-434fcc93bfac)** — the full results report: pipeline, model comparison, feature importance, Monte Carlo simulator, all 9 countries' yield trends.
+- **[Grain Belt Atlas](https://claude.ai/code/artifact/acf0445e-1da4-4946-88c1-b3f8c509b4bf)** — a separate interactive map. Click any of the 9 countries to see exactly where its data came from (the real satellite footprint and weather-station coordinates), its yield trend, and its drought-scenario risk. Built with `src/build_map_paths.py` — see that file's docstring for how the map itself was generated.
 
 ## Interactive demo
 
