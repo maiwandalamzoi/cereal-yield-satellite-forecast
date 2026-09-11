@@ -1,0 +1,208 @@
+country_iso3,country_name,year,cereal_yield_kg_ha
+AFG,Afghanistan,2001,1006.7
+AFG,Afghanistan,2002,1669.8
+AFG,Afghanistan,2003,1458.0
+AFG,Afghanistan,2004,1334.8
+AFG,Afghanistan,2005,1790.4
+AFG,Afghanistan,2006,1551.7
+AFG,Afghanistan,2007,1915.3
+AFG,Afghanistan,2008,1455.4
+AFG,Afghanistan,2009,2040.7
+AFG,Afghanistan,2010,2011.1
+AFG,Afghanistan,2011,1659.9
+AFG,Afghanistan,2012,2094.2
+AFG,Afghanistan,2013,2127.7
+AFG,Afghanistan,2014,2096.6
+AFG,Afghanistan,2015,2206.4
+AFG,Afghanistan,2016,2043.3
+AFG,Afghanistan,2017,2091.4
+AFG,Afghanistan,2018,2253.2
+AFG,Afghanistan,2019,2184.7
+AFG,Afghanistan,2020,2050.8
+AFG,Afghanistan,2021,2099.1
+AFG,Afghanistan,2022,2193.4
+AFG,Afghanistan,2023,2303.0
+IRN,"Iran, Islamic Rep.",2001,1932.6
+IRN,"Iran, Islamic Rep.",2002,2272.9
+IRN,"Iran, Islamic Rep.",2003,2383.4
+IRN,"Iran, Islamic Rep.",2004,2417.1
+IRN,"Iran, Islamic Rep.",2005,2301.2
+IRN,"Iran, Islamic Rep.",2006,2391.8
+IRN,"Iran, Islamic Rep.",2007,2454.3
+IRN,"Iran, Islamic Rep.",2008,1720.9
+IRN,"Iran, Islamic Rep.",2009,1997.2
+IRN,"Iran, Islamic Rep.",2010,2173.5
+IRN,"Iran, Islamic Rep.",2011,1713.7
+IRN,"Iran, Islamic Rep.",2012,1745.4
+IRN,"Iran, Islamic Rep.",2013,1847.1
+IRN,"Iran, Islamic Rep.",2014,2051.5
+IRN,"Iran, Islamic Rep.",2015,2231.0
+IRN,"Iran, Islamic Rep.",2016,2653.3
+IRN,"Iran, Islamic Rep.",2017,2531.0
+IRN,"Iran, Islamic Rep.",2018,2657.3
+IRN,"Iran, Islamic Rep.",2019,2653.7
+IRN,"Iran, Islamic Rep.",2020,2618.8
+IRN,"Iran, Islamic Rep.",2021,2301.5
+IRN,"Iran, Islamic Rep.",2022,2317.6
+IRN,"Iran, Islamic Rep.",2023,2420.4
+KAZ,Kazakhstan,2001,1216.6
+KAZ,Kazakhstan,2002,1145.7
+KAZ,Kazakhstan,2003,1077.5
+KAZ,Kazakhstan,2004,884.3
+KAZ,Kazakhstan,2005,998.2
+KAZ,Kazakhstan,2006,1170.9
+KAZ,Kazakhstan,2007,1326.9
+KAZ,Kazakhstan,2008,1011.3
+KAZ,Kazakhstan,2009,1253.1
+KAZ,Kazakhstan,2010,804.1
+KAZ,Kazakhstan,2011,1688.6
+KAZ,Kazakhstan,2012,865.1
+KAZ,Kazakhstan,2013,1164.9
+KAZ,Kazakhstan,2014,1172.7
+KAZ,Kazakhstan,2015,1275.6
+KAZ,Kazakhstan,2016,1347.8
+KAZ,Kazakhstan,2017,1355.0
+KAZ,Kazakhstan,2018,1359.6
+KAZ,Kazakhstan,2019,1147.6
+KAZ,Kazakhstan,2020,1282.5
+KAZ,Kazakhstan,2021,1038.3
+KAZ,Kazakhstan,2022,1371.8
+KAZ,Kazakhstan,2023,1028.4
+NLD,Netherlands,2001,7280.5
+NLD,Netherlands,2002,7313.9
+NLD,Netherlands,2003,7956.8
+NLD,Netherlands,2004,8066.3
+NLD,Netherlands,2005,7879.7
+NLD,Netherlands,2006,7854.2
+NLD,Netherlands,2007,7289.7
+NLD,Netherlands,2008,8332.3
+NLD,Netherlands,2009,9032.9
+NLD,Netherlands,2010,8569.3
+NLD,Netherlands,2011,7800.8
+NLD,Netherlands,2012,8545.0
+NLD,Netherlands,2013,8630.1
+NLD,Netherlands,2014,9073.7
+NLD,Netherlands,2015,8752.8
+NLD,Netherlands,2016,7776.9
+NLD,Netherlands,2017,8794.5
+NLD,Netherlands,2018,7927.3
+NLD,Netherlands,2019,8676.6
+NLD,Netherlands,2020,7944.3
+NLD,Netherlands,2021,7850.7
+NLD,Netherlands,2022,8860.0
+NLD,Netherlands,2023,8079.5
+PAK,Pakistan,2001,2230.5
+PAK,Pakistan,2002,2260.2
+PAK,Pakistan,2003,2320.6
+PAK,Pakistan,2004,2430.7
+PAK,Pakistan,2005,2615.8
+PAK,Pakistan,2006,2554.0
+PAK,Pakistan,2007,2743.9
+PAK,Pakistan,2008,2653.7
+PAK,Pakistan,2009,2789.7
+PAK,Pakistan,2010,2611.0
+PAK,Pakistan,2011,2953.4
+PAK,Pakistan,2012,2862.6
+PAK,Pakistan,2013,3001.3
+PAK,Pakistan,2014,3001.2
+PAK,Pakistan,2015,2942.4
+PAK,Pakistan,2016,3020.7
+PAK,Pakistan,2017,3180.4
+PAK,Pakistan,2018,3149.0
+PAK,Pakistan,2019,3160.6
+PAK,Pakistan,2020,3353.4
+PAK,Pakistan,2021,3489.4
+PAK,Pakistan,2022,3463.0
+PAK,Pakistan,2023,3634.0
+TJK,Tajikistan,2001,1397.9
+TJK,Tajikistan,2002,1889.3
+TJK,Tajikistan,2003,2100.6
+TJK,Tajikistan,2004,2150.4
+TJK,Tajikistan,2005,2164.4
+TJK,Tajikistan,2006,2158.7
+TJK,Tajikistan,2007,2440.0
+TJK,Tajikistan,2008,2141.0
+TJK,Tajikistan,2009,3119.4
+TJK,Tajikistan,2010,3117.2
+TJK,Tajikistan,2011,2519.3
+TJK,Tajikistan,2012,2891.1
+TJK,Tajikistan,2013,3159.4
+TJK,Tajikistan,2014,3189.4
+TJK,Tajikistan,2015,3261.0
+TJK,Tajikistan,2016,3348.7
+TJK,Tajikistan,2017,3459.5
+TJK,Tajikistan,2018,3404.4
+TJK,Tajikistan,2019,3636.7
+TJK,Tajikistan,2020,3525.6
+TJK,Tajikistan,2021,3885.1
+TJK,Tajikistan,2022,3926.0
+TJK,Tajikistan,2023,3732.8
+TUR,Turkiye,2001,2178.3
+TUR,Turkiye,2002,2242.0
+TUR,Turkiye,2003,2308.6
+TUR,Turkiye,2004,2477.9
+TUR,Turkiye,2005,2634.5
+TUR,Turkiye,2006,2661.9
+TUR,Turkiye,2007,2410.2
+TUR,Turkiye,2008,2601.3
+TUR,Turkiye,2009,2807.8
+TUR,Turkiye,2010,2725.6
+TUR,Turkiye,2011,2970.0
+TUR,Turkiye,2012,2958.4
+TUR,Turkiye,2013,3256.9
+TUR,Turkiye,2014,2832.1
+TUR,Turkiye,2015,3307.8
+TUR,Turkiye,2016,3105.4
+TUR,Turkiye,2017,3257.4
+TUR,Turkiye,2018,3163.9
+TUR,Turkiye,2019,3200.8
+TUR,Turkiye,2020,3341.5
+TUR,Turkiye,2021,2918.5
+TUR,Turkiye,2022,3464.7
+TUR,Turkiye,2023,3659.1
+UKR,Ukraine,2001,2729.5
+UKR,Ukraine,2002,2752.2
+UKR,Ukraine,2003,2278.4
+UKR,Ukraine,2004,2845.2
+UKR,Ukraine,2005,2623.0
+UKR,Ukraine,2006,2427.7
+UKR,Ukraine,2007,2206.7
+UKR,Ukraine,2008,3486.9
+UKR,Ukraine,2009,3003.8
+UKR,Ukraine,2010,2726.6
+UKR,Ukraine,2011,3753.7
+UKR,Ukraine,2012,3156.8
+UKR,Ukraine,2013,4030.8
+UKR,Ukraine,2014,4400.2
+UKR,Ukraine,2015,4140.9
+UKR,Ukraine,2016,4651.6
+UKR,Ukraine,2017,4314.6
+UKR,Ukraine,2018,4850.3
+UKR,Ukraine,2019,4978.3
+UKR,Ukraine,2020,4295.6
+UKR,Ukraine,2021,5454.6
+UKR,Ukraine,2022,4614.2
+UKR,Ukraine,2023,5578.1
+UZB,Uzbekistan,2001,3042.9
+UZB,Uzbekistan,2002,3765.9
+UZB,Uzbekistan,2003,3522.4
+UZB,Uzbekistan,2004,3596.1
+UZB,Uzbekistan,2005,4042.1
+UZB,Uzbekistan,2006,4103.2
+UZB,Uzbekistan,2007,4396.9
+UZB,Uzbekistan,2008,4285.3
+UZB,Uzbekistan,2009,4553.1
+UZB,Uzbekistan,2010,4434.2
+UZB,Uzbekistan,2011,4414.5
+UZB,Uzbekistan,2012,4597.9
+UZB,Uzbekistan,2013,4746.4
+UZB,Uzbekistan,2014,4806.6
+UZB,Uzbekistan,2015,4835.2
+UZB,Uzbekistan,2016,4827.0
+UZB,Uzbekistan,2017,4298.2
+UZB,Uzbekistan,2018,4103.9
+UZB,Uzbekistan,2019,4554.0
+UZB,Uzbekistan,2020,4510.8
+UZB,Uzbekistan,2021,4774.4
+UZB,Uzbekistan,2022,5007.8
+UZB,Uzbekistan,2023,5343.6

@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  syntax-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: pip install -r requirements.txt
+      - name: Syntax check all src files
+        run: python -c "import ast, glob; [ast.parse(open(f, encoding='utf-8').read()) for f in glob.glob('src/*.py')]; print('OK')"
+      - name: Train/evaluate on committed data (no network calls)
+        run: python src/train.py
+      - name: Run Monte Carlo simulation on committed data
+        run: python src/simulate.py
