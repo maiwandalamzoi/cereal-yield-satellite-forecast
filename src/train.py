@@ -51,7 +51,7 @@ FEATURES = (
     + [f"temp_m{m:02d}_c" for m in MONTHS]
     + ["ndvi_season_max", "yield_lag1"]
 )
-TARGET = "cereal_yield_kg_ha"
+TARGET = "wheat_yield_kg_ha"
 
 
 def evaluate(name, y_true, y_pred, results):

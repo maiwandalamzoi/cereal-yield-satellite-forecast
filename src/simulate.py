@@ -1,8 +1,10 @@
 """
 Monte Carlo scenario simulation: instead of one point forecast, produce a
 yield *distribution* per country under a named scenario, using the trained
-Random Forest model (tied for best on the test set, and simpler to drive
-than the fixed-effects model since it needs no country dummy columns).
+LightGBM model (best on the test set on the full 23-country panel --
+switched from Random Forest, which won on the earlier smaller 9-country
+panel; see README for both results, reported as-is rather than picking
+whichever model flatters the story).
 
 Design choice, stated plainly: scenarios are built by RESAMPLING this
 country's own real historical seasons, stratified by how dry/stressed that
@@ -31,10 +33,14 @@ import joblib
 import numpy as np
 import pandas as pd
 
-FEATURES = [
-    "ndvi_season_mean", "ndvi_season_max", "evi_season_mean",
-    "season_precip_total_mm", "season_temp_mean_c", "yield_lag1",
-]
+MONTHS = [2, 3, 4, 5, 6]
+FEATURES = (
+    [f"ndvi_m{m:02d}" for m in MONTHS]
+    + [f"evi_m{m:02d}" for m in MONTHS]
+    + [f"precip_m{m:02d}_mm" for m in MONTHS]
+    + [f"temp_m{m:02d}_c" for m in MONTHS]
+    + ["ndvi_season_max", "yield_lag1"]
+)  # must match train.py's FEATURES exactly -- this loads and drives that model
 
 N_DRAWS = 5000
 SCENARIOS = ["driest_tercile", "all_years", "wettest_tercile"]
@@ -56,8 +62,8 @@ def simulate_country(model, panel, country_iso3, scenario, latest_yield, rng):
     if len(pool) == 0:
         return None
     draws = pool.sample(n=N_DRAWS, replace=True, random_state=rng.integers(1e9))
-    X = draws[["ndvi_season_mean", "ndvi_season_max", "evi_season_mean",
-               "season_precip_total_mm", "season_temp_mean_c"]].copy()
+    x_cols = [c for c in FEATURES if c != "yield_lag1"]
+    X = draws[x_cols].copy()
     X["yield_lag1"] = latest_yield  # condition on the real, known last-observed yield
     preds = model.predict(X[FEATURES])
     return {
@@ -78,13 +84,13 @@ def main():
     args = ap.parse_args()
     rng = np.random.default_rng(args.seed)
 
-    model = joblib.load("models/random_forest_yield.joblib")
+    model = joblib.load("models/lightgbm_yield.joblib")
     panel = pd.read_csv("data/processed/panel.csv")
 
     results = []
     for country_iso3 in sorted(panel["country_iso3"].unique()):
         latest_row = panel[panel["country_iso3"] == country_iso3].sort_values("year").iloc[-1]
-        latest_yield = latest_row["cereal_yield_kg_ha"]
+        latest_yield = latest_row["wheat_yield_kg_ha"]
         for scenario in SCENARIOS:
             r = simulate_country(model, panel, country_iso3, scenario, latest_yield, rng)
             if r:

@@ -24,11 +24,11 @@ import pandas as pd
 import streamlit as st
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
-from simulate import SCENARIOS, simulate_country  # noqa: E402
+from simulate import FEATURES, SCENARIOS, simulate_country  # noqa: E402
 
-st.set_page_config(page_title="Cereal Yield Scenario Simulator", page_icon="🌾")
+st.set_page_config(page_title="Wheat Yield Scenario Simulator", page_icon="🌾")
 
-st.title("🌾 Cereal Yield Scenario Simulator")
+st.title("🌾 Wheat Yield Scenario Simulator")
 st.caption(
     "Monte Carlo scenarios built on a trained Random Forest model — "
     "[see the full methodology, metrics, and honest limitations on GitHub]"
@@ -38,7 +38,7 @@ st.caption(
 
 @st.cache_resource
 def load_model():
-    return joblib.load("models/random_forest_yield.joblib")
+    return joblib.load("models/lightgbm_yield.joblib")
 
 
 @st.cache_data
@@ -66,7 +66,7 @@ with col2:
     )
 
 latest_row = panel[panel["country_iso3"] == country].sort_values("year").iloc[-1]
-latest_yield = latest_row["cereal_yield_kg_ha"]
+latest_yield = latest_row["wheat_yield_kg_ha"]
 latest_year = int(latest_row["year"])
 
 rng = np.random.default_rng(42)
@@ -99,10 +99,10 @@ else:
         terciles = pool["ndvi_season_mean"].quantile([1 / 3, 2 / 3]).values
         pool = pool[pool["ndvi_season_mean"] <= terciles[0]] if scenario == "driest_tercile" \
             else pool[pool["ndvi_season_mean"] >= terciles[1]]
-    X = pool[["ndvi_season_mean", "ndvi_season_max", "evi_season_mean",
-              "season_precip_total_mm", "season_temp_mean_c"]].copy()
+    x_cols = [c for c in FEATURES if c != "yield_lag1"]
+    X = pool[x_cols].copy()
     X["yield_lag1"] = latest_yield
-    preds = model.predict(X)
+    preds = model.predict(X[FEATURES])
     ax.hist(np.repeat(preds, 200), bins=30, color="#3a7d44", alpha=0.75)
     ax.axvline(latest_yield, color="#b3261e", linestyle="--", label=f"{latest_year} actual")
     ax.set_xlabel("kg/ha")

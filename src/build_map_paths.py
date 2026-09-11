@@ -27,6 +27,12 @@ TARGETS = {
     "Afghanistan": "AFG", "Pakistan": "PAK", "Iran": "IRN", "Kazakhstan": "KAZ",
     "Uzbekistan": "UZB", "Tajikistan": "TJK", "Turkey": "TUR", "Ukraine": "UKR",
     "Netherlands": "NLD",
+    # Expansion set -- now spans every populated continent, so the map is a
+    # world map, not a regional one (see BBOX removal below).
+    "China": "CHN", "India": "IND", "United States of America": "USA",
+    "Canada": "CAN", "Australia": "AUS", "Argentina": "ARG", "Egypt": "EGY",
+    "Morocco": "MAR", "Kyrgyzstan": "KGZ", "Azerbaijan": "AZE", "Georgia": "GEO",
+    "France": "FRA", "Germany": "DEU", "Turkmenistan": "TKM",
 }
 
 # Regional context: everything else, styled neutral, for orientation.
@@ -70,17 +76,20 @@ for name, iso in TARGETS.items():
     c = shape(geom).centroid
     target_centroids[iso] = project(c.x, c.y)
 
-# Context countries: keep separate (no union -- avoids invalid-geometry issues from
-# the full-world dataset), restricted to a bounding box around our region so we're
-# not carrying Antarctica etc, coarser tolerance since these are just orientation fill.
-BBOX = (-15, 10, 95, 65)  # lon_min, lat_min, lon_max, lat_max
+# Context countries: keep separate (no union -- avoids invalid-geometry issues
+# from the full-world dataset). Targets now span every populated continent, so
+# this is a world map -- only Antarctica is excluded (by southern latitude,
+# not name, since coordinate-cutting is what actually controls file size/
+# viewBox, and some sub-Antarctic islands share a feature with mainland
+# countries). Coarser tolerance since these are just orientation fill.
+MIN_LAT = -58
 context_paths = []
 for name, feat in by_name.items():
     if name in TARGETS:
         continue
     g = shape(feat["geometry"])
     b = g.bounds  # (minx,miny,maxx,maxy)
-    if b[2] < BBOX[0] or b[0] > BBOX[2] or b[3] < BBOX[1] or b[1] > BBOX[3]:
+    if b[3] < MIN_LAT:  # entirely south of MIN_LAT -- Antarctica itself
         continue
     try:
         p = geom_to_path(feat["geometry"], tol=0.08)
