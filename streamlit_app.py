@@ -32,7 +32,7 @@ st.title("🌾 Cereal Yield Scenario Simulator")
 st.caption(
     "Monte Carlo scenarios built on a trained Random Forest model — "
     "[see the full methodology, metrics, and honest limitations on GitHub]"
-    "(https://github.com/maiwandalamzoi/afghan-wheat-yield-prediction)."
+    "(https://github.com/maiwandalamzoi/cereal-yield-satellite-forecast)."
 )
 
 
