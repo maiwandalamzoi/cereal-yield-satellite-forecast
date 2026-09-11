@@ -166,8 +166,22 @@ streamlit run streamlit_app.py
 python -m venv venv
 venv\Scripts\activate          # Windows
 pip install -r requirements.txt
-copy .env.example .env         # fill in a GEE service account
+copy .env.example .env         # only needed to re-extract satellite data
 ```
+
+`requirements.txt` is pinned to exact versions (Python 3.11.9, scikit-learn
+1.8.0, etc.) — the versions the committed `models/*.joblib` were actually
+trained with. Not a formality: an unpinned install during verification
+grabbed a newer scikit-learn and threw an `InconsistentVersionWarning` on
+model load. Pinning was then verified by installing into a clean venv from
+a fresh clone and confirming the warning is gone.
+
+**You do not need a GEE account or any API key to use the trained models or
+the demo.** `models/*.joblib` and `data/processed/panel.csv` are committed —
+`streamlit run streamlit_app.py`, `python src/train.py`, and
+`python src/simulate.py` all run immediately after `pip install`. A GEE
+service account is only needed to re-run `src/extract_satellite.py` and
+pull fresh satellite data.
 
 ## Reproduce
 
