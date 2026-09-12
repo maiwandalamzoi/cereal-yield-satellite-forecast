@@ -101,7 +101,7 @@
   .toggle{display:flex; gap:2px; background:var(--surface-sunk); padding:4px; border-radius:9px;}
   .toggle button{font-family:"IBM Plex Mono",monospace; font-size:12.5px; padding:8px 15px; border-radius:7px; border:none; background:transparent; color:var(--ink-2); cursor:pointer;}
   .toggle button.on{background:var(--surface); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,0.1);}
-  svg.map{width:100%; height:auto; min-height:560px; display:block; background:var(--map-sea); border-radius:10px;}
+  svg.map{width:100%; height:auto; max-height:min(620px, calc(100vh - 260px)); min-height:320px; display:block; margin:0 auto; background:var(--map-sea); border-radius:10px;}
   .land{fill:var(--map-land); stroke:var(--map-land-line); stroke-width:0.15;}
   .country{stroke:var(--surface); stroke-width:0.25; cursor:pointer; transition:opacity .15s;}
   .country:hover{opacity:0.82;}
