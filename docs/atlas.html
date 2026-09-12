@@ -10,68 +10,65 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,440;9..144,560;9..144,650&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
   :root{
-    --bg:            #F7F7F1;
+    --bg:            #F5F6FA;
     --surface:       #FFFFFF;
-    --surface-sunk:  #F0F0E8;
-    --ink:           #1B1F17;
-    --ink-2:         #565F4E;
-    --ink-muted:     #8B9284;
-    --border:        rgba(27,31,23,0.12);
-    --accent:        #3E7D3E;
-    --accent-ink:    #245A28;
-    --accent-tint:   rgba(62,125,62,0.12);
-    --gold:          #A5791F;
-    --gold-tint:     rgba(165,121,31,0.14);
-    --dry:           #B5562E;
-    --dry-tint:      rgba(181,86,46,0.13);
-    --wet:           #0E8A73;
-    --map-land:      #E4E2D4;
-    --map-land-line: #CFCCB8;
-    --map-sea:       #EAF1EC;
-    --shadow:        0 1px 2px rgba(27,31,23,0.06), 0 8px 24px -12px rgba(27,31,23,0.18);
+    --surface-sunk:  #EDEFF4;
+    --ink:           #1A1D24;
+    --ink-2:         #4B5468;
+    --ink-muted:     #838AA0;
+    --border:        rgba(26,29,36,0.12);
+    --accent:        #B8781E;
+    --accent-ink:    #8A5912;
+    --accent-tint:   rgba(184,120,30,0.12);
+    --gold:          #B23E6B;
+    --gold-tint:     rgba(178,62,107,0.14);
+    --dry:           #3A5CA8;
+    --dry-tint:      rgba(58,92,168,0.13);
+    --map-land:      #E3E5EC;
+    --map-land-line: #CBCEDA;
+    --map-sea:       #EEF1F7;
+    --shadow:        0 1px 2px rgba(26,29,36,0.06), 0 8px 24px -12px rgba(26,29,36,0.18);
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:            #12150F;
-      --surface:       #1B2016;
-      --surface-sunk:  #171B12;
-      --ink:           #ECEEE4;
-      --ink-2:         #B7BFAE;
-      --ink-muted:     #838C7C;
-      --border:        rgba(236,238,228,0.13);
-      --accent:        #5FBD5F;
-      --accent-ink:    #7DD37D;
-      --accent-tint:   rgba(95,189,95,0.16);
-      --gold:          #D9AE55;
-      --gold-tint:     rgba(217,174,85,0.16);
-      --dry:           #D9764A;
-      --dry-tint:      rgba(217,118,74,0.18);
-      --wet:           #22A886;
-      --map-land:      #262B1F;
-      --map-land-line: #343B2B;
-      --map-sea:       #151A17;
+      --bg:            #11141B;
+      --surface:       #181C26;
+      --surface-sunk:  #1E2330;
+      --ink:           #E8EAF2;
+      --ink-2:         #ABB2C4;
+      --ink-muted:     #757C90;
+      --border:        rgba(232,234,242,0.13);
+      --accent:        #E3A542;
+      --accent-ink:    #F0C274;
+      --accent-tint:   rgba(227,165,66,0.16);
+      --gold:          #E087AC;
+      --gold-tint:     rgba(224,135,172,0.16);
+      --dry:           #6E93D8;
+      --dry-tint:      rgba(110,147,216,0.18);
+      --map-land:      #262B3A;
+      --map-land-line: #363D50;
+      --map-sea:       #12151E;
       --shadow:        0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
     }
   }
   :root[data-theme="dark"]{
-    --bg:            #12150F;
-    --surface:       #1B2016;
-    --surface-sunk:  #171B12;
-    --ink:           #ECEEE4;
-    --ink-2:         #B7BFAE;
-    --ink-muted:     #838C7C;
-    --border:        rgba(236,238,228,0.13);
-    --accent:        #5FBD5F;
-    --accent-ink:    #7DD37D;
-    --accent-tint:   rgba(95,189,95,0.16);
-    --gold:          #D9AE55;
-    --gold-tint:     rgba(217,174,85,0.16);
-    --dry:           #D9764A;
-    --dry-tint:      rgba(217,118,74,0.18);
-    --wet:           #22A886;
-    --map-land:      #262B1F;
-    --map-land-line: #343B2B;
-    --map-sea:       #151A17;
+    --bg:            #11141B;
+    --surface:       #181C26;
+    --surface-sunk:  #1E2330;
+    --ink:           #E8EAF2;
+    --ink-2:         #ABB2C4;
+    --ink-muted:     #757C90;
+    --border:        rgba(232,234,242,0.13);
+    --accent:        #E3A542;
+    --accent-ink:    #F0C274;
+    --accent-tint:   rgba(227,165,66,0.16);
+    --gold:          #E087AC;
+    --gold-tint:     rgba(224,135,172,0.16);
+    --dry:           #6E93D8;
+    --dry-tint:      rgba(110,147,216,0.18);
+    --map-land:      #262B3A;
+    --map-land-line: #363D50;
+    --map-sea:       #12151E;
     --shadow:        0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
   }
 
@@ -115,6 +112,12 @@
   .legend{gap:14px;}
   .legend .ramp{flex:1; height:12px; border-radius:6px; max-width:520px; background:linear-gradient(90deg, var(--ramp-lo), var(--ramp-mid) 50%, var(--ramp-hi));}
 
+  /* ---- shared floating tooltip, used by map + charts ---- */
+  .viz-tooltip{position:fixed; top:0; left:0; z-index:40; pointer-events:none; background:var(--ink); color:var(--bg); font-family:"IBM Plex Mono",monospace; font-size:11.5px; line-height:1.5; padding:8px 10px; border-radius:7px; box-shadow:var(--shadow); max-width:220px; opacity:0; transform:translate(-9999px,-9999px); transition:opacity .1s;}
+  .viz-tooltip.show{opacity:1;}
+  .viz-tooltip b{color:var(--bg); font-family:"Public Sans",sans-serif; font-weight:600;}
+  .viz-tooltip .tt-sub{opacity:.68;}
+
   .panel{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:26px 28px; box-shadow:var(--shadow); margin-top:22px;}
   .panel-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;}
   .panel-head h3{font-size:24px;}
@@ -130,13 +133,22 @@
   .kv-row .k{color:var(--ink-muted);}
   .kv-row .v{font-family:"IBM Plex Mono",monospace; color:var(--ink); text-align:right;}
 
-  .spark{width:100%; height:44px; display:block; margin:2px 0 4px;}
+  .spark{width:100%; height:64px; display:block; margin:2px 0 4px; cursor:crosshair;}
+  .spark-hit{fill:transparent; cursor:pointer;}
+  .spark-dot{fill:var(--gold); stroke:var(--surface); stroke-width:1;}
+  .spark-hover-dot{fill:var(--ink); stroke:var(--surface); stroke-width:1; opacity:0; pointer-events:none; transition:opacity .1s;}
+  .spark-hover-dot.show{opacity:1;}
+  .spark-crosshair{stroke:var(--ink-muted); stroke-width:0.6; stroke-dasharray:2,2; opacity:0; pointer-events:none;}
+  .spark-crosshair.show{opacity:1;}
 
   .scen{display:flex; flex-direction:column; gap:6px; margin-top:4px;}
-  .scen-row{display:grid; grid-template-columns:78px 1fr 40px; align-items:center; gap:8px; font-size:11.5px;}
+  .scen-row{display:grid; grid-template-columns:78px 1fr 40px; align-items:center; gap:8px; font-size:11.5px; padding:4px 6px; margin:0 -6px; border-radius:6px; cursor:pointer; transition:background .1s;}
+  .scen-row:hover, .scen-row:focus-visible, .scen-row.active{background:var(--surface-sunk);}
   .scen-row .sl{color:var(--ink-2);}
-  .scen-bar{height:6px; border-radius:3px; background:var(--surface-sunk); position:relative;}
-  .scen-bar i{position:absolute; top:-3px; width:2px; height:12px; background:var(--ink); border-radius:1px;}
+  .scen-bar{height:7px; border-radius:3.5px; background:var(--surface-sunk); position:relative;}
+  .scen-row:hover .scen-bar, .scen-row.active .scen-bar{background:var(--border);}
+  .scen-bar .range{position:absolute; top:0; bottom:0; border-radius:3.5px; background:var(--dry-tint);}
+  .scen-bar i{position:absolute; top:-3.5px; width:2px; height:14px; background:var(--ink); border-radius:1px;}
   .scen-pct{font-family:"IBM Plex Mono",monospace; text-align:right; color:var(--ink-muted);}
 
   footer{padding:36px 0 0; border-top:1px solid var(--border); margin-top:24px;}
@@ -233,6 +245,22 @@ function lerpColor(h1,h2,t){
   return `rgb(${c[0]},${c[1]},${c[2]})`;
 }
 
+// ---- shared floating tooltip (map hover + chart hover/click) ----
+const tooltipEl = document.createElement("div");
+tooltipEl.className = "viz-tooltip";
+document.body.appendChild(tooltipEl);
+function showTooltip(html, clientX, clientY){
+  tooltipEl.innerHTML = html;
+  tooltipEl.classList.add("show");
+  const pad = 14;
+  const r = tooltipEl.getBoundingClientRect();
+  let x = clientX + pad, y = clientY - r.height - pad;
+  if(x + r.width > window.innerWidth - 8) x = clientX - r.width - pad;
+  if(y < 8) y = clientY + pad;
+  tooltipEl.style.transform = `translate(${x}px, ${y}px)`;
+}
+function hideTooltip(){ tooltipEl.classList.remove("show"); }
+
 let metric = "yield";
 let selected = "AFG";
 
@@ -252,25 +280,24 @@ function median(arr){
   return s.length%2 ? s[mid] : (s[mid-1]+s[mid])/2;
 }
 
-// Real diverging scale, not a single-hue ramp: below the panel's own median
-// gets the terracotta pole, above it gets the green pole, through a neutral
-// midpoint -- two hues, not one washed-out gradient. "Below/above median"
-// (not min/max) is the meaningful zero for both metrics: for yield, that's
-// "worse/better than a typical country in this panel"; for risk, matches
-// how the value is already framed (low risk = good = green).
+// Real diverging scale, not a single-hue ramp: --accent (amber) always marks
+// the favorable pole, --dry (blue) the unfavorable one, through a neutral
+// midpoint that reads straight off --surface-sunk (so it always matches the
+// current theme, no separate isDark branch to keep in sync). "Below/above
+// median" (not min/max) is the meaningful zero for both metrics: for yield,
+// higher = better = amber; for risk, higher = worse = blue.
 function colorFor(iso){
   const vals = ISO_ORDER.map(metricValue);
   const mid = median(vals);
   const maxDev = Math.max(...vals.map(v=>Math.abs(v-mid))) || 1;
   const v = metricValue(iso);
   const t = Math.max(-1, Math.min(1, (v-mid)/maxDev));
-  const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
-  const midColor = isDark ? "#2A3023" : "#EDE9DD";
+  const midColor = css('--surface-sunk');
   if(metric==="yield"){
-    // above median (higher yield) -> green; below median -> terracotta
+    // above median (higher yield, better) -> amber; below (worse) -> blue
     return t >= 0 ? lerpColor(midColor, css('--accent'), t) : lerpColor(midColor, css('--dry'), -t);
   } else {
-    // above median (higher risk) -> terracotta; below median (lower risk) -> green
+    // above median (higher risk, worse) -> blue; below (lower risk, better) -> amber
     return t >= 0 ? lerpColor(midColor, css('--dry'), t) : lerpColor(midColor, css('--accent'), -t);
   }
 }
@@ -280,8 +307,7 @@ function renderLegend(){
   const vals = ISO_ORDER.map(metricValue);
   const lo = Math.min(...vals), hi = Math.max(...vals), mid = median(vals);
   const fmt = metric==="yield" ? (v)=>Math.round(v).toLocaleString()+" kg/ha" : (v)=>Math.round(v)+"%";
-  const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
-  const midColor = isDark ? "#2A3023" : "#EDE9DD";
+  const midColor = css('--surface-sunk');
   const loColor = metric==="yield" ? css('--dry') : css('--accent');
   const hiColor = metric==="yield" ? css('--accent') : css('--dry');
   wrap.innerHTML = `<span>${fmt(lo)}</span><span class="ramp" style="--ramp-lo:${loColor};--ramp-mid:${midColor};--ramp-hi:${hiColor}"></span><span>${fmt(hi)}</span><span class="mono" style="color:var(--ink-muted);font-size:11px;">median ${fmt(mid)}</span>`;
@@ -302,8 +328,17 @@ function buildMap(){
   });
   svg += `</svg>`;
   document.getElementById("mapSvgWrap").innerHTML = svg;
+  const rankOf = iso => [...ISO_ORDER].sort((a,b)=>metricValue(b)-metricValue(a)).indexOf(iso)+1;
   ISO_ORDER.forEach(iso=>{
-    document.getElementById("c-"+iso).addEventListener("click", ()=>{ selected=iso; renderAll(); });
+    const el = document.getElementById("c-"+iso);
+    el.addEventListener("click", ()=>{ selected=iso; renderAll(); });
+    el.addEventListener("mousemove", (e)=>{
+      const v = metricValue(iso);
+      const valTxt = metric==="yield" ? Math.round(v).toLocaleString()+" kg/ha" : Math.round(v)+"% chance below last year";
+      const rankTxt = metric==="yield" ? `#${rankOf(iso)} of ${ISO_ORDER.length} by yield` : `#${rankOf(iso)} of ${ISO_ORDER.length} by risk`;
+      showTooltip(`<b>${NAME[iso]}</b><br>${valTxt}<div class="tt-sub">${rankTxt} — click for details</div>`, e.clientX, e.clientY);
+    });
+    el.addEventListener("mouseleave", hideTooltip);
   });
 }
 
@@ -329,20 +364,66 @@ function interpretation(iso){
   return `Yield has <strong>${dir} ${Math.abs(pctChange).toFixed(0)}%</strong> since ${first.year}, to ${last.wheat_yield_kg_ha.toLocaleString()} kg/ha in ${last.year} — <strong>#${rank} of 23</strong> in this panel. In a season as dry as this country's historical driest third, the model puts roughly <strong>${riskPct}% odds</strong> of falling below that ${last.year} harvest.`;
 }
 
+// Interactive line chart, not a bare sparkline: hover or click any year for
+// its exact value (large invisible hit-circles per point, since the real
+// dot targets are too small to hit reliably), with a crosshair so the
+// active point's position on the timeline is visible, not just its number.
 function renderSpark(iso){
   const rows = byCountry[iso];
   const vals = rows.map(r=>r.wheat_yield_kg_ha);
   const lo=Math.min(...vals), hi=Math.max(...vals);
-  const W=260,H=44,pad=3;
-  const x=i=> pad + i/(rows.length-1)*(W-2*pad);
-  const y=v=> H-pad-(v-lo)/((hi-lo)||1)*(H-2*pad);
+  const W=260,H=64,padX=4,padY=8;
+  const x=i=> padX + i/(rows.length-1)*(W-2*padX);
+  const y=v=> H-padY-(v-lo)/((hi-lo)||1)*(H-2*padY);
   const d = rows.map((r,i)=> (i===0?"M":"L")+x(i).toFixed(1)+","+y(r.wheat_yield_kg_ha).toFixed(1)).join(" ");
-  return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+  const hits = rows.map((r,i)=>`<circle class="spark-hit" data-i="${i}" cx="${x(i).toFixed(1)}" cy="${y(r.wheat_yield_kg_ha).toFixed(1)}" r="9"/>`).join("");
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" data-iso="${iso}">
+    <line class="spark-crosshair" x1="0" x2="0" y1="0" y2="${H}"/>
     <path d="${d}" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="${x(rows.length-1)}" cy="${y(vals[vals.length-1])}" r="2.6" fill="var(--gold)"/>
+    <circle class="spark-dot" cx="${x(rows.length-1).toFixed(1)}" cy="${y(vals[vals.length-1]).toFixed(1)}" r="2.6"/>
+    <circle class="spark-hover-dot" cx="${x(rows.length-1).toFixed(1)}" cy="${y(vals[vals.length-1]).toFixed(1)}" r="3.2"/>
+    ${hits}
   </svg>`;
 }
 
+// Wires up the hover/click behavior for the chart renderSpark() just drew --
+// separate from the render step since SVG template strings can't carry
+// event listeners, only attributes.
+function wireSpark(iso){
+  const svg = document.querySelector('.spark[data-iso="'+iso+'"]');
+  if(!svg) return;
+  const rows = byCountry[iso];
+  const vals = rows.map(r=>r.wheat_yield_kg_ha);
+  const lo=Math.min(...vals), hi=Math.max(...vals);
+  const W=260,H=64,padX=4,padY=8;
+  const x=i=> padX + i/(rows.length-1)*(W-2*padX);
+  const y=v=> H-padY-(v-lo)/((hi-lo)||1)*(H-2*padY);
+  const crosshair = svg.querySelector('.spark-crosshair');
+  const hoverDot = svg.querySelector('.spark-hover-dot');
+  function highlight(i, clientX, clientY){
+    const r = rows[i];
+    crosshair.setAttribute('x1', x(i)); crosshair.setAttribute('x2', x(i));
+    crosshair.classList.add('show');
+    hoverDot.setAttribute('cx', x(i)); hoverDot.setAttribute('cy', y(r.wheat_yield_kg_ha));
+    hoverDot.classList.add('show');
+    showTooltip(`<b>${r.year}</b><div>${Math.round(r.wheat_yield_kg_ha).toLocaleString()} kg/ha</div>`, clientX, clientY);
+  }
+  function reset(){
+    crosshair.classList.remove('show');
+    hoverDot.classList.remove('show');
+    hideTooltip();
+  }
+  svg.querySelectorAll('.spark-hit').forEach(hit=>{
+    const i = +hit.dataset.i;
+    hit.addEventListener('mousemove', e=> highlight(i, e.clientX, e.clientY));
+    hit.addEventListener('mouseleave', reset);
+    hit.addEventListener('click', e=>{ e.stopPropagation(); highlight(i, e.clientX, e.clientY); });
+  });
+}
+
+// Adds a real P10-P90 range fill under the median tick (not just a lone
+// marker), and every row is hoverable/clickable/focusable for the exact
+// simulated numbers behind that "X% chance below" figure.
 function renderScenarios(iso){
   const s = simByCountry[iso];
   const order = [["driest_tercile","Driest 1/3"],["all_years","Typical"],["wettest_tercile","Wettest 1/3"]];
@@ -351,12 +432,31 @@ function renderScenarios(iso){
   const pct = v => ((v-lo)/(hi-lo))*100;
   return order.map(([key,label])=>{
     const r = s[key];
-    return `<div class="scen-row">
+    return `<div class="scen-row" data-key="${key}" tabindex="0">
       <span class="sl">${label}</span>
-      <span class="scen-bar"><i style="left:calc(${pct(r.p50_kg_ha).toFixed(1)}% - 1px)"></i></span>
+      <span class="scen-bar"><span class="range" style="left:${pct(r.p10_kg_ha).toFixed(1)}%;width:${(pct(r.p90_kg_ha)-pct(r.p10_kg_ha)).toFixed(1)}%"></span><i style="left:calc(${pct(r.p50_kg_ha).toFixed(1)}% - 1px)"></i></span>
       <span class="scen-pct">${Math.round(r.prob_below_last_year*100)}%↓</span>
     </div>`;
   }).join("");
+}
+
+function wireScenarios(iso){
+  const s = simByCountry[iso];
+  const last = byCountry[iso][byCountry[iso].length-1];
+  document.querySelectorAll('#detailPanel .scen-row').forEach(row=>{
+    const r = s[row.dataset.key];
+    const label = row.querySelector('.sl').textContent;
+    function show(clientX, clientY){
+      row.classList.add('active');
+      showTooltip(`<b>${label} seasons</b><div>P10 ${Math.round(r.p10_kg_ha).toLocaleString()} · P50 ${Math.round(r.p50_kg_ha).toLocaleString()} · P90 ${Math.round(r.p90_kg_ha).toLocaleString()} kg/ha</div><div class="tt-sub">${Math.round(r.prob_below_last_year*100)}% chance of falling below ${last.year}'s actual ${Math.round(last.wheat_yield_kg_ha).toLocaleString()} kg/ha</div>`, clientX, clientY);
+    }
+    function hide(){ row.classList.remove('active'); hideTooltip(); }
+    row.addEventListener('mousemove', e=> show(e.clientX, e.clientY));
+    row.addEventListener('mouseleave', hide);
+    row.addEventListener('click', e=> show(e.clientX, e.clientY));
+    row.addEventListener('focus', ()=>{ const b = row.getBoundingClientRect(); show(b.right, b.top); });
+    row.addEventListener('blur', hide);
+  });
 }
 
 function renderPanel(){
@@ -383,6 +483,8 @@ function renderPanel(){
       </div>
     </div>
   `;
+  wireSpark(iso);
+  wireScenarios(iso);
 }
 
 function renderAll(){
