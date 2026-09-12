@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Interactive world map: click any of 23 countries to see its real data sources, wheat yield trend, and drought risk.">
+<meta name="description" content="Interactive world map: click any of 23 countries to see its real data sources, wheat yield trend, and drought risk. Now with a bigger map and a real diverging color scale.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <style>*{margin:0;padding:0}img{max-width:100%}</style>
 <title>Grain Belt Atlas</title>
@@ -94,16 +94,14 @@
   .dstat .l{font-size:11.5px; color:var(--ink-muted); margin-top:2px;}
 
   main{padding:32px 0;}
-  .layout{display:grid; grid-template-columns:1.5fr 1fr; gap:28px; align-items:start;}
-  @media (max-width:860px){.layout{grid-template-columns:1fr;}}
 
-  .map-panel{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 18px 14px; box-shadow:var(--shadow);}
-  .map-head{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:10px;}
-  .map-head h2{font-size:17px;}
-  .toggle{display:flex; gap:2px; background:var(--surface-sunk); padding:3px; border-radius:8px;}
-  .toggle button{font-family:"IBM Plex Mono",monospace; font-size:11.5px; padding:6px 11px; border-radius:6px; border:none; background:transparent; color:var(--ink-2); cursor:pointer;}
-  .toggle button.on{background:var(--surface); color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,0.08);}
-  svg.map{width:100%; height:auto; display:block; background:var(--map-sea); border-radius:8px;}
+  .map-panel{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px 24px 20px; box-shadow:var(--shadow);}
+  .map-head{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:16px;}
+  .map-head h2{font-size:24px;}
+  .toggle{display:flex; gap:2px; background:var(--surface-sunk); padding:4px; border-radius:9px;}
+  .toggle button{font-family:"IBM Plex Mono",monospace; font-size:12.5px; padding:8px 15px; border-radius:7px; border:none; background:transparent; color:var(--ink-2); cursor:pointer;}
+  .toggle button.on{background:var(--surface); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,0.1);}
+  svg.map{width:100%; height:auto; min-height:560px; display:block; background:var(--map-sea); border-radius:10px;}
   .land{fill:var(--map-land); stroke:var(--map-land-line); stroke-width:0.15;}
   .country{stroke:var(--surface); stroke-width:0.25; cursor:pointer; transition:opacity .15s;}
   .country:hover{opacity:0.82;}
@@ -114,16 +112,19 @@
   .clabel{font-family:"IBM Plex Mono",monospace; pointer-events:none; fill:var(--ink); font-weight:600; paint-order:stroke; stroke:var(--surface); stroke-width:2.2; stroke-linejoin:round;}
 
   .legend{display:flex; align-items:center; gap:10px; margin-top:12px; font-size:11.5px; color:var(--ink-muted); font-family:"IBM Plex Mono",monospace;}
-  .legend .ramp{flex:1; height:8px; border-radius:4px; background:linear-gradient(90deg, var(--ramp-a), var(--ramp-b));}
+  .legend{gap:14px;}
+  .legend .ramp{flex:1; height:12px; border-radius:6px; max-width:520px; background:linear-gradient(90deg, var(--ramp-lo), var(--ramp-mid) 50%, var(--ramp-hi));}
 
-  .panel{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:22px; box-shadow:var(--shadow); position:sticky; top:16px;}
+  .panel{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:26px 28px; box-shadow:var(--shadow); margin-top:22px;}
   .panel-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;}
-  .panel-head h3{font-size:21px;}
+  .panel-head h3{font-size:24px;}
   .panel-head .iso{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-muted);}
   .interp{font-size:13.5px; color:var(--ink-2); margin:10px 0 18px; line-height:1.6; padding:12px 14px; background:var(--surface-sunk); border-radius:8px;}
   .interp strong{color:var(--ink);}
 
-  .kv{display:flex; flex-direction:column; gap:1px; margin-bottom:16px;}
+  .detail-grid{display:grid; grid-template-columns:1fr 1.3fr; gap:32px; margin-top:16px;}
+  @media (max-width:780px){.detail-grid{grid-template-columns:1fr;}}
+  .kv{display:flex; flex-direction:column; gap:1px;}
   .kv-row{display:flex; justify-content:space-between; gap:10px; padding:7px 0; border-top:1px solid var(--border); font-size:13px;}
   .kv-row:first-child{border-top:none;}
   .kv-row .k{color:var(--ink-muted);}
@@ -156,21 +157,19 @@
   </header>
 
   <main>
-    <div class="layout">
-      <div class="map-panel">
-        <div class="map-head">
-          <h2 id="mapTitle">Latest wheat yield</h2>
-          <div class="toggle" id="metricToggle">
-            <button data-m="yield" class="on">Yield level</button>
-            <button data-m="risk">Drought risk</button>
-          </div>
+    <div class="map-panel">
+      <div class="map-head">
+        <h2 id="mapTitle">Latest wheat yield</h2>
+        <div class="toggle" id="metricToggle">
+          <button data-m="yield" class="on">Yield level</button>
+          <button data-m="risk">Drought risk</button>
         </div>
-        <div id="mapSvgWrap"></div>
-        <div class="legend" id="legendWrap"></div>
       </div>
-
-      <div class="panel" id="detailPanel"></div>
+      <div id="mapSvgWrap"></div>
+      <div class="legend" id="legendWrap"></div>
     </div>
+
+    <div class="panel" id="detailPanel"></div>
   </main>
 
   <footer>
@@ -225,6 +224,7 @@ document.getElementById("dataStrip").innerHTML = `
 `;
 
 // ---- color helpers ----
+function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
 function hexToRgb(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
 function lerp(a,b,t){return a+(b-a)*t;}
 function lerpColor(h1,h2,t){
@@ -246,34 +246,46 @@ function metricValue(iso){
   }
 }
 
+function median(arr){
+  const s = [...arr].sort((a,b)=>a-b);
+  const mid = Math.floor(s.length/2);
+  return s.length%2 ? s[mid] : (s[mid-1]+s[mid])/2;
+}
+
+// Real diverging scale, not a single-hue ramp: below the panel's own median
+// gets the terracotta pole, above it gets the green pole, through a neutral
+// midpoint -- two hues, not one washed-out gradient. "Below/above median"
+// (not min/max) is the meaningful zero for both metrics: for yield, that's
+// "worse/better than a typical country in this panel"; for risk, matches
+// how the value is already framed (low risk = good = green).
 function colorFor(iso){
   const vals = ISO_ORDER.map(metricValue);
-  const lo = Math.min(...vals), hi = Math.max(...vals);
-  const t = (metricValue(iso)-lo)/((hi-lo)||1);
+  const mid = median(vals);
+  const maxDev = Math.max(...vals.map(v=>Math.abs(v-mid))) || 1;
+  const v = metricValue(iso);
+  const t = Math.max(-1, Math.min(1, (v-mid)/maxDev));
   const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const midColor = isDark ? "#2A3023" : "#EDE9DD";
   if(metric==="yield"){
-    return lerpColor(isDark? "#2E4A2E":"#CFE6CF", isDark? "#5FBD5F":"#3E7D3E", t);
+    // above median (higher yield) -> green; below median -> terracotta
+    return t >= 0 ? lerpColor(midColor, css('--accent'), t) : lerpColor(midColor, css('--dry'), -t);
   } else {
-    return lerpColor(isDark? "#4A362A":"#F0DACB", isDark? "#D9764A":"#B5562E", t);
+    // above median (higher risk) -> terracotta; below median (lower risk) -> green
+    return t >= 0 ? lerpColor(midColor, css('--dry'), t) : lerpColor(midColor, css('--accent'), -t);
   }
 }
 
 function renderLegend(){
   const wrap = document.getElementById("legendWrap");
   const vals = ISO_ORDER.map(metricValue);
-  const lo = Math.min(...vals), hi = Math.max(...vals);
+  const lo = Math.min(...vals), hi = Math.max(...vals), mid = median(vals);
   const fmt = metric==="yield" ? (v)=>Math.round(v).toLocaleString()+" kg/ha" : (v)=>Math.round(v)+"%";
-  wrap.innerHTML = `<span>${fmt(lo)}</span><span class="ramp"></span><span>${fmt(hi)}</span>`;
-  const ramp = wrap.querySelector(".ramp");
   const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
-  if(metric==="yield"){
-    ramp.style.setProperty('--ramp-a', isDark? "#2E4A2E":"#CFE6CF");
-    ramp.style.setProperty('--ramp-b', isDark? "#5FBD5F":"#3E7D3E");
-  } else {
-    ramp.style.setProperty('--ramp-a', isDark? "#4A362A":"#F0DACB");
-    ramp.style.setProperty('--ramp-b', isDark? "#D9764A":"#B5562E");
-  }
-  document.getElementById("mapTitle").textContent = metric==="yield" ? "Latest wheat yield" : "Drought-scenario risk (driest third of seasons)";
+  const midColor = isDark ? "#2A3023" : "#EDE9DD";
+  const loColor = metric==="yield" ? css('--dry') : css('--accent');
+  const hiColor = metric==="yield" ? css('--accent') : css('--dry');
+  wrap.innerHTML = `<span>${fmt(lo)}</span><span class="ramp" style="--ramp-lo:${loColor};--ramp-mid:${midColor};--ramp-hi:${hiColor}"></span><span>${fmt(hi)}</span><span class="mono" style="color:var(--ink-muted);font-size:11px;">median ${fmt(mid)}</span>`;
+  document.getElementById("mapTitle").textContent = metric==="yield" ? "Latest wheat yield — vs. panel median" : "Drought-scenario risk (driest third of seasons) — vs. panel median";
 }
 
 // ---- build map SVG ----
@@ -355,17 +367,21 @@ function renderPanel(){
   document.getElementById("detailPanel").innerHTML = `
     <div class="panel-head"><h3>${NAME[iso]}</h3><span class="iso">${iso}</span></div>
     <div class="interp">${interpretation(iso)}</div>
-    <div class="kv">
-      <div class="kv-row"><span class="k">Latest yield (${last.year})</span><span class="v">${last.wheat_yield_kg_ha.toLocaleString()} kg/ha</span></div>
-      <div class="kv-row"><span class="k">Satellite coverage</span><span class="v">country-wide, MODIS/GEE</span></div>
-      <div class="kv-row"><span class="k">Weather station</span><span class="v">${gb[2]}</span></div>
-      <div class="kv-row"><span class="k">Station coordinates</span><span class="v">${gb[0].toFixed(2)}°N, ${gb[1].toFixed(2)}°E</span></div>
-      <div class="kv-row"><span class="k">Years of record</span><span class="v">${rows.length} (${rows[0].year}–${last.year})</span></div>
+    <div class="detail-grid">
+      <div class="kv">
+        <div class="kv-row"><span class="k">Latest yield (${last.year})</span><span class="v">${last.wheat_yield_kg_ha.toLocaleString()} kg/ha</span></div>
+        <div class="kv-row"><span class="k">Satellite coverage</span><span class="v">country-wide, MODIS/GEE</span></div>
+        <div class="kv-row"><span class="k">Weather station</span><span class="v">${gb[2]}</span></div>
+        <div class="kv-row"><span class="k">Station coordinates</span><span class="v">${gb[0].toFixed(2)}°N, ${gb[1].toFixed(2)}°E</span></div>
+        <div class="kv-row"><span class="k">Years of record</span><span class="v">${rows.length} (${rows[0].year}–${last.year})</span></div>
+      </div>
+      <div>
+        <div style="font-size:11.5px;color:var(--ink-muted);margin-bottom:6px;">Yield trend, 2002–2023</div>
+        ${renderSpark(iso)}
+        <div style="font-size:11.5px;color:var(--ink-muted);margin:14px 0 2px;">Simulated yield vs. ${last.year} actual (% chance below)</div>
+        <div class="scen">${renderScenarios(iso)}</div>
+      </div>
     </div>
-    <div style="font-size:11.5px;color:var(--ink-muted);margin-bottom:4px;">Yield trend, 2002–2023</div>
-    ${renderSpark(iso)}
-    <div style="font-size:11.5px;color:var(--ink-muted);margin:14px 0 2px;">Simulated yield vs. ${last.year} actual (% chance below)</div>
-    <div class="scen">${renderScenarios(iso)}</div>
   `;
 }
 
